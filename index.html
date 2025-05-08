@@ -6,18 +6,39 @@
   <title>Braz Grill Assados</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-yellow-50 text-gray-900 font-sans">
+<body class="text-gray-900 font-sans scroll-smooth"
+      style="background-image: url('f.jpg'); background-size: cover; background-repeat: no-repeat; background-attachment: fixed;">
 
-  <!-- Hero Section -->
-  <header class="bg-red-700 text-white text-center p-6 shadow-md">
-    <h1 class="text-4xl font-bold">Braz Grill Assados</h1>
-    <p class="text-lg">Sabor, tradição e qualidade direto da brasa!</p>
-  </header>
 
-  <section class="text-center py-10 px-4 bg-white">
-    <img src="hero.jpg" alt="O melhor assado do Brasil" class="w-full max-w-4xl mx-auto rounded-lg shadow mb-6">
-    <h2 class="text-3xl font-semibold mb-4">Assados com amor e sabor</h2>
-    <p class="text-lg max-w-2xl mx-auto text-gray-700">Carnes selecionadas, tempero caseiro e o ponto perfeito direto para sua mesa.</p>
+  <!-- Barra de Navegação Estilizada -->
+<nav class="bg-white shadow sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+    
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+      <img src="logo.png" alt="Logo Braz Grill" class="h-10 w-10 rounded-full shadow-md" />
+      <span class="text-xl font-bold text-red-700">Braz Grill</span>
+    </div>
+
+    <!-- Links de navegação -->
+    <ul class="flex flex-wrap gap-4 text-sm md:text-base font-medium text-gray-700">
+      <li><a href="#home" class="hover:text-red-600 transition">Home</a></li>
+      <li><a href="#cardapio" class="hover:text-red-600 transition">Cardápio</a></li>
+      <li><a href="#bebidas" class="hover:text-red-600 transition">Bebidas</a></li>
+      <li><a href="#bovinas" class="hover:text-red-600 transition">Carnes Bovinas</a></li>
+      <li><a href="#suinas" class="hover:text-red-600 transition">Carnes Suínas</a></li>
+      <li><a href="#frangos" class="hover:text-red-600 transition">Frangos</a></li>
+      <li><a href="#sobre" class="hover:text-red-600 transition">Sobre Nós</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+  <!-- Hero / Home -->
+  <section id="home" class="text-center py-10 px-4 bg-white">
+    <img src="hero.jpg" alt="Churrasco de qualidade" class="w-full max-w-4xl mx-auto rounded-lg shadow mb-6">
+    <h1 class="text-4xl font-bold">Assados com sabor de verdade</h1>
+    <p class="text-lg mt-4 text-gray-700">Carnes selecionadas, temperos caseiros e atendimento de primeira!</p>
     <a href="#cardapio" class="mt-6 inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-full transition">Ver Cardápio</a>
   </section>
 
@@ -33,6 +54,36 @@
   <section id="cardapio" class="py-16 px-4 bg-white text-center">
     <h2 class="text-3xl font-bold mb-6">Nosso Cardápio</h2>
     <img src="cardapio.jpg" alt="Cardápio Braz Grill" class="w-full max-w-3xl mx-auto rounded shadow-lg" />
+  </section>
+
+  <!-- Carnes -->
+  <section id="bovinas" class="py-12 px-4 bg-yellow-100 text-center">
+    <h2 class="text-2xl font-bold mb-4">Carnes Bovinas</h2>
+<img src="cardapio.jpg" alt="Cardápio Braz Grill" class="w-full max-w-3xl mx-auto rounded shadow-lg" />
+    <p>Costela, fraldinha e cupim feitos no ponto perfeito.</p>
+  </section>
+
+  <section id="suinas" class="py-12 px-4 bg-white text-center">
+    <h2 class="text-2xl font-bold mb-4">Carnes Suínas</h2>
+    <p>Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
+  </section>
+
+  <section id="frangos" class="py-12 px-4 bg-yellow-100 text-center">
+    <h2 class="text-2xl font-bold mb-4">Frangos</h2>
+    <p>Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
+  </section>
+
+  <!-- Bebidas -->
+  <section id="bebidas" class="py-12 px-4 bg-white text-center">
+    <h2 class="text-2xl font-bold mb-4">Bebidas</h2>
+<img src="bebidas.jpg" alt="Cardápio Braz Grill" class="w-full max-w-3xl mx-auto rounded shadow-lg" />
+    <p>Em breve! Bebidas geladas para acompanhar seu assado.</p>
+  </section>
+
+  <!-- Sobre Nós -->
+  <section id="sobre" class="py-16 px-4 bg-red-50 text-center">
+    <h2 class="text-3xl font-bold mb-4">Sobre Nós</h2>
+    <p class="max-w-2xl mx-auto text-lg text-gray-700">A Braz Grill Assados nasceu da paixão por comida de verdade. Oferecemos assados artesanais com ingredientes frescos e tempero de família. Estamos localizados em Curitiba e servimos com carinho todos os finais de semana!</p>
   </section>
 
   <!-- Footer -->
