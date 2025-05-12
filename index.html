@@ -35,49 +35,67 @@
     }
 
     nav {
-      background-color: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+}
 
-    .nav-container {
+.nav-container {
   max-width: 1120px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   padding: 12px 16px;
+  flex-wrap: nowrap;
 }
 
 .logo {
-  flex-grow: 1;
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
+}
+
+.logo img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.logo span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #b91c1c;
+  white-space: nowrap;
 }
 
 nav ul {
   display: flex;
   gap: 16px;
+  margin-left: auto; /* 👈 força os itens para a direita */
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin-bottom: 0;
+  flex-wrap: wrap;
   font-size: 14px;
   font-weight: 500;
   color: #374151;
-  margin-left: auto; /* ✅ isso move o menu para a direita */
 }
 
-    nav ul a {
-      text-decoration: none;
-      color: inherit;
-      transition: color 0.3s;
-    }
+nav ul a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s;
+}
 
-    nav ul a:hover {
-      color: #b91c1c;
-    }
+nav ul a:hover {
+  color: #b91c1c;
+}
+
 
     section {
       padding: 48px 16px;
