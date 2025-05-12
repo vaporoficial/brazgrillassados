@@ -109,19 +109,35 @@ nav ul a:hover {
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-    .grid-img {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      align-items: center;
-      padding: 1rem;
-    }
+   .grid-img {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  padding: 1rem;
+  max-width: 100%;
+}
 
-    @media (min-width: 768px) {
-      .grid-img {
-        flex-direction: row;
-        justify-content: center;
-      }
+.grid-img img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .grid-img {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .grid-img img {
+    max-width: 480px; /* 🔧 define tamanho confortável por imagem */
+  }
+}
 
       nav ul {
         font-size: 16px;
