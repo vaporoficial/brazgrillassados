@@ -1,362 +1,151 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Braz Grill Assados</title>
-  <style>
-.whatsapp-mascote {
-  position: fixed;
-  bottom: 80px; /* Ajuste a distância entre o mascote e o botão */
-  right: 20px;
-  z-index: 1001;
+<style>
+/* Correções globais e responsivas */
+body {
+  font-family: sans-serif;
+  color: #1f2937;
+  scroll-behavior: smooth;
+  background-image: url('f.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
 }
 
-.whatsapp-mascote img {
-  width: 100px; /* Você pode ajustar o tamanho conforme o necessário */
-  border-radius: 12px;
-  
+h1 {
+  font-size: clamp(1.75rem, 5vw, 2.5rem); /* adaptável */
 }
-    /* Estilo WhatsApp */
-    .whatsapp-float {
+
+h2 {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+p {
+  font-size: clamp(0.95rem, 2.5vw, 1.125rem);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Hero, cardápio, bebidas */
+.hero img,
+.cardapio img,
+.bebidas img {
+  max-width: 90vw;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Grid Responsivo */
+.grid-img {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-img {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  nav ul {
+    font-size: 16px;
+  }
+}
+
+/* Botão */
+.btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #dc2626;
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background-color: #b91c1c;
+}
+
+/* WhatsApp */
+.whatsapp-float {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 16px;
+  right: 16px;
   display: flex;
   align-items: center;
   background-color: #25D366;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 16px;
   border-radius: 40px;
-  text-decoration: none;
-  font-family: Arial, sans-serif;
-  font-size: 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
   z-index: 1000;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  transform-origin: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.whatsapp-float:hover {
-  background-color: #128C7E;
-  transform: scale(1.15);
+.whatsapp-float img {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
 }
 
+/* Mascote */
+.whatsapp-mascote {
+  position: fixed;
+  bottom: 72px;
+  right: 16px;
+  z-index: 1001;
+}
 
-    .whatsapp-float img {
-      width: 50px;
-      height: 50px;
-      margin-right: 10px;
-    }
+.whatsapp-mascote img {
+  width: 60px;
+  border-radius: 8px;
+}
 
-    body {
-      font-family: sans-serif;
-      color: #1f2937;
-      scroll-behavior: smooth;
-      background-image: url('f.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      margin: 0;
-    }
-
-    nav {
-      background-color: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .nav-container {
-      max-width: 1120px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo img {
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
-      box-shadow: 0 0 4px rgba(0,0,0,0.2);
-    }
-
-    .logo span {
-      font-size: 20px;
-      font-weight: bold;
-      color: #b91c1c;
-    }
-
-    nav ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #374151;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    nav ul a {
-      text-decoration: none;
-      color: inherit;
-      transition: color 0.3s;
-    }
-
-    nav ul a:hover {
-      color: #b91c1c;
-    }
-
-    section {
-      padding: 48px 16px;
-      text-align: center;
-    }
-
-    .hero img,
-    .cardapio img,
-    .bebidas img,
-    .bovinas img {
-      width: 100%;
-      max-width: 768px;
-      margin: 0 auto 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: block;
-    }
-
-    h1, h2 {
-      font-weight: bold;
-      margin-bottom: 16px;
-    }
-
-    h1 {
-      font-size: 32px;
-    }
-
-    h2 {
-      font-size: 24px;
-    }
-
-    p {
-      font-size: 16px;
-      color: #374151;
-    }
-
-    .btn {
-      display: inline-block;
-      margin-top: 24px;
-      background-color: #dc2626;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 9999px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background-color 0.3s;
-    }
-
-    .btn:hover {
-      background-color: #b91c1c;
-    }
-
-    .grid-img {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 32px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 768px) {
-      .grid-img {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      nav ul {
-        font-size: 16px;
-      }
-    }
-
-    .grid-img img {
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-      margin: auto;
-    }
-
-    footer {
-      background-color: #b91c1c;
-      color: white;
-      text-align: center;
-      padding: 24px 16px;
-    }
-
-    footer p {
-      margin: 8px 0;
-    }
-
-    footer a {
-      color: white;
-      text-decoration: underline;
-    }
-
-    .bg-yellow {
-      background-color: #fef3c7;
-    }
-
-    .bg-red-light {
-      background-color: #fef2f2;
-    }
-
-    /* Estilo dos vídeos laterais fixos */
-    .video-lateral-esquerda,
+/* Vídeos laterais */
+.video-lateral-esquerda,
 .video-lateral-direita {
   position: fixed;
   top: 0;
   bottom: 0;
-  width: 160px;
+  width: 120px;
   height: 100vh;
   object-fit: cover;
   z-index: 999;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  border-radius: 0;
 }
 
-    .video-lateral-esquerda {
-      left: 10px;
-    }
+.video-lateral-esquerda {
+  left: 0;
+}
 
-    .video-lateral-direita {
-      right: 10px;
-    }
+.video-lateral-direita {
+  right: 0;
+}
 
-    /* Oculta os vídeos em telas pequenas */
-    @media (max-width: 768px) {
-      .video-lateral-esquerda,
-      .video-lateral-direita {
-        display: none;
-      }
-    }
-  </style>
-</head>
-<body>
+@media (max-width: 1024px) {
+  .video-lateral-esquerda,
+  .video-lateral-direita {
+    display: none;
+  }
+}
 
-  <!-- Barra de Navegação -->
-  <nav>
-    <div class="nav-container">
-      <div class="logo">
-        <img src="logo.png" alt="Logo Braz Grill" />
-        <span>Braz Grill Assados </span>
-      </div>
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#cardapio">Cardápio</a></li>
-        <li><a href="#bebidas">Bebidas</a></li>
-        <li><a href="#bovinas">Carnes Bovinas</a></li>
-        <li><a href="#suinas">Carnes Suínas</a></li>
-        <li><a href="#frangos">Frangos</a></li>
-        <li><a href="#sobre">Sobre Nós</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- Hero -->
-  <section id="home" class="hero" style="background-color: white;">
-    <img src="hero.jpg" alt="Churrasco de qualidade" />
-    <h1>Assados com sabor de verdade</h1>
-    <p>Carnes selecionadas, temperos caseiros e atendimento de primeira!</p>
-    <a href="#cardapio" class="btn">Ver Cardápio</a>
-  </section>
-
-  <!-- Imagens -->
-  <section class="bg-yellow">
-    <div class="grid-img">
-      <img src="imagem1.jpg" alt="Assado 1" />
-      <img src="imagem2.jpg" alt="Assado 2" />
-    </div>
-  </section>
-
-  <!-- Cardápio -->
-  <section id="cardapio" class="cardapio" style="background-color: white;">
-    <h2>Nosso Cardápio</h2>
-    <img src="cardapio.jpg" alt="Cardápio Braz Grill" />
-  </section>
-
-  <!-- Carnes Bovinas -->
-  <section id="bovinas" class="bg-yellow">
-    <h2>Carnes Bovinas</h2>
-    <p>Costela, fraldinha e cupim feitos no ponto perfeito.</p>
-  </section>
-
-  <!-- Carnes Suínas -->
-  <section id="suinas" style="background-color: white;">
-    <h2>Carnes Suínas</h2>
-    <p>Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
-  </section>
-
-  <!-- Frangos -->
-  <section id="frangos" class="bg-yellow">
-    <h2>Frangos</h2>
-    <p>Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
-  </section>
-
-  <!-- Bebidas -->
-  <section id="bebidas" class="bebidas" style="background-color: white;">
-    <h2>Bebidas</h2>
-    <img src="bebidas.jpg" alt="Cardápio Braz Grill" />
-    <p>Em breve! Bebidas geladas para acompanhar seu assado.</p>
-  </section>
-
-  <!-- Sobre -->
-  <section id="sobre" class="bg-red-light">
-    <h2>Sobre Nós</h2>
-    <p style="max-width: 640px; margin: 0 auto;">
-      Assamos todos os tipos de carnes, bovinos, suínos e frangos, nosso diferencial está no tempo de preparo, com as carnes assadas desde as 5 horas da manhã o que proporciona melhor sabor e suculência das carnes e também a nossa costela sem osso assada no papel celofane.
-      Estamos a mais de 23 anos no mercado, nossa prioridade é você cliente. seja bem vindo
-    </p>
-  </section>
-
-  <!-- Rodapé -->
-  <footer>
-    <p>📍 Rua República Islâmica do Irã, 330 - Jardim das Américas - Curitiba/PR</p>
-    <p>📞 WhatsApp: <a href="https://wa.me/5541988738707">41 98873-8707</a></p>
-    <p>⏰ Sáb: 10h–14h | Dom: 10h–16h</p>
-    <p class="text-sm">© 2025 Braz Grill Assados</p>
-  </footer>
-<!-- Mascote acima do botão WhatsApp -->
-<div class="whatsapp-mascote">
-  <img src="mascote.png" alt="Mascote Braz Grill" />
-</div>
-
-  <!-- WhatsApp Flutuante -->
-  <a href="https://wa.me/5541988738707?text=Olá! Gostaria de fazer uma reserva." 
-     class="whatsapp-float" 
-     target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
-    <span class="whatsapp-msg">Faça uma reserva</span>
-  </a>
-
-  <!-- Vídeos fixos nas laterais -->
-  <video autoplay muted loop class="video-lateral-esquerda">
-    <source src="video-esquerdo.mp4" type="video/mp4" />
-    Seu navegador não suporta vídeo.
-  </video>
-
-  <video autoplay muted loop class="video-lateral-direita">
-    <source src="video-direito.mp4" type="video/mp4" />
-    Seu navegador não suporta vídeo.
-  </video>
-
-</body>
-</html>
+/* Rodapé */
+footer {
+  background-color: #b91c1c;
+  color: white;
+  text-align: center;
+  padding: 24px 16px;
+  font-size: 0.95rem;
+}
+</style>
