@@ -236,11 +236,13 @@
     .video-lateral-direita { right: 10px; }
 
     @media (max-width: 768px) {
-      .video-lateral-esquerda,
-      .video-lateral-direita {
-        display: none;
-      }
-    }
+  .video-lateral {
+    position: static !important;
+    display: block;
+    width: 100%;
+    margin: 10px auto;
+  }
+}
   </style>
 </head>
 <body>
