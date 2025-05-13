@@ -5,163 +5,128 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Braz Grill Assados</title>
   <style>
-    .img-bebidas {
-  max-width: 500px;
-  width: 90%;
-  margin: 0 auto 1.5rem;
-  display: block;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: sans-serif;
-      color: #1f2937;
-      scroll-behavior: smooth;
-      background-image: url('f.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
       margin: 0;
-    }
-
-    h1 {
-      font-size: clamp(1.75rem, 5vw, 2.5rem);
-    }
-
-    h2 {
-      font-size: clamp(1.25rem, 4vw, 1.75rem);
-    }
-
-    p {
-      font-size: clamp(0.95rem, 2.5vw, 1.125rem);
-      line-height: 1.6;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
     }
 
     nav {
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
-}
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
 
-.nav-container {
-  max-width: 1120px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  flex-wrap: nowrap;
-}
+    .nav-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 16px;
+    }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-}
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+    }
 
-.logo img {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  box-shadow: 0 0 4px rgba(0,0,0,0.2);
-}
+    .logo img {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
 
-.logo span {
-  font-size: 20px;
-  font-weight: bold;
-  color: #b91c1c;
-  white-space: nowrap;
-}
+    .logo span {
+      font-size: 20px;
+      font-weight: bold;
+      color: #b91c1c;
+    }
 
-nav ul {
-  display: flex;
-  gap: 16px;
-  margin-left: auto; /* 👈 força os itens para a direita */
-  list-style: none;
-  padding: 0;
-  margin-bottom: 0;
-  flex-wrap: wrap;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-}
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 8px 12px;
+    }
 
-nav ul a {
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.3s;
-}
+    nav ul li a {
+      text-decoration: none;
+      color: #374151;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
 
-nav ul a:hover {
-  color: #b91c1c;
-}
-
+    nav ul li a:hover {
+      background-color: #f3f4f6;
+    }
 
     section {
-      padding: 48px 16px;
+      padding: 40px 20px;
       text-align: center;
     }
 
-    .hero img, .cardapio img, .bebidas img {
-      max-width: 90vw;
+    .hero img {
+      max-width: 100%;
+      height: auto;
       border-radius: 8px;
-      margin-bottom: 1.5rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-   .grid-img {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: center;
-  padding: 1rem;
-  max-width: 100%;
-}
+    h1, h2 {
+      color: #b91c1c;
+      margin-bottom: 12px;
+    }
 
-.grid-img img {
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  object-fit: contain;
-}
-
-@media (min-width: 768px) {
-  .grid-img {
-    flex-direction: row;
-    justify-content: center;
-    gap: 2rem;
-  }
-
-  .grid-img img {
-    max-width: 480px; /* 🔧 define tamanho confortável por imagem */
-  }
-}
-
-      nav ul {
-        font-size: 16px;
-      }
+    p {
+      color: #374151;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .btn {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
+      margin-top: 20px;
       background-color: #dc2626;
-      color: #fff;
+      color: white;
+      padding: 10px 20px;
       border-radius: 9999px;
-      font-weight: 600;
       text-decoration: none;
-      font-size: 1rem;
+      display: inline-block;
+    }
+
+    .grid-img {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .grid-img img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 8px;
+    }
+
+    .cardapio img,
+    .bebidas img {
+      max-width: 90%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .bebidas img {
+      transform: scale(0.9);
     }
 
     footer {
@@ -169,41 +134,49 @@ nav ul a:hover {
       color: white;
       text-align: center;
       padding: 24px 16px;
-      font-size: 0.95rem;
     }
 
+    footer a {
+      color: white;
+      text-decoration: underline;
+    }
+
+    /* WhatsApp Flutuante */
     .whatsapp-float {
       position: fixed;
-      bottom: 16px;
-      right: 16px;
+      bottom: 20px;
+      right: 20px;
       display: flex;
       align-items: center;
       background-color: #25D366;
       color: white;
-      padding: 10px 16px;
+      padding: 10px 15px;
       border-radius: 40px;
-      font-size: 18px;
+      text-decoration: none;
+      font-size: 16px;
       z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .whatsapp-float img {
       width: 32px;
       height: 32px;
-      margin-right: 8px;
+      margin-right: 10px;
     }
 
     .whatsapp-mascote {
       position: fixed;
-      bottom: 72px;
-      right: 16px;
+      bottom: 80px;
+      right: 20px;
       z-index: 1001;
     }
 
     .whatsapp-mascote img {
       width: 60px;
-      border-radius: 8px;
+      border-radius: 12px;
     }
 
+    /* Vídeos laterais */
     .video-lateral-esquerda,
     .video-lateral-direita {
       position: fixed;
@@ -223,25 +196,16 @@ nav ul a:hover {
       right: 0;
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 768px) {
       .video-lateral-esquerda,
       .video-lateral-direita {
         display: none;
       }
     }
-
-    .bg-yellow {
-      background-color: #fef3c7;
-    }
-
-    .bg-red-light {
-      background-color: #fef2f2;
-    }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <div class="nav-container">
       <div class="logo">
@@ -260,7 +224,7 @@ nav ul a:hover {
     </div>
   </nav>
 
-  <!-- Hero -->
+  <!-- Home -->
   <section id="home" class="hero">
     <img src="hero.jpg" alt="Churrasco de qualidade" />
     <h1>Assados com sabor de verdade</h1>
@@ -269,21 +233,26 @@ nav ul a:hover {
   </section>
 
   <!-- Imagens -->
-  <section class="bg-yellow">
-    <div class="grid-img">
-      <img src="imagem1.jpg" alt="Assado 1" />
-      <img src="imagem2.jpg" alt="Assado 2" />
-    </div>
+  <section class="grid-img" id="cardapio">
+    <img src="imagem1.jpg" alt="Assado 1" />
+    <img src="imagem2.jpg" alt="Assado 2" />
+  </section>
+
+  <!-- Bebidas -->
+  <section id="bebidas" class="bebidas">
+    <h2>Bebidas</h2>
+    <img src="bebidas.jpg" alt="Cardápio Bebidas" />
+    <p>Em breve! Bebidas geladas para acompanhar seu assado.</p>
   </section>
 
   <!-- Cardápio -->
-  <section id="cardapio" class="cardapio">
-    <h2>Nosso Cardápio</h2>
+  <section class="cardapio">
+    <h2>Cardápio Completo</h2>
     <img src="cardapio.jpg" alt="Cardápio Braz Grill" />
   </section>
 
   <!-- Carnes -->
-  <section id="bovinas" class="bg-yellow">
+  <section id="bovinas">
     <h2>Carnes Bovinas</h2>
     <p>Costela, fraldinha e cupim feitos no ponto perfeito.</p>
   </section>
@@ -293,25 +262,20 @@ nav ul a:hover {
     <p>Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
   </section>
 
-  <section id="frangos" class="bg-yellow">
+  <section id="frangos">
     <h2>Frangos</h2>
     <p>Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
   </section>
 
-  <section id="bebidas" class="bebidas">
-    <h2>Bebidas</h2>
-    <img src="bebidas.jpg" alt="Cardápio Braz Grill" class="img-bebidas" />
-    <p>Em breve! Bebidas geladas para acompanhar seu assado.</p>
-  </section>
-
-  <section id="sobre" class="bg-red-light">
+  <!-- Sobre -->
+  <section id="sobre">
     <h2>Sobre Nós</h2>
-    <p>Assamos todos os tipos de carnes, com preparo cuidadoso desde as 5h da manhã, oferecendo o melhor sabor. Estamos há mais de 23 anos no mercado!</p>
+    <p>Estamos há mais de 23 anos no mercado oferecendo assados artesanais com ingredientes frescos. Nossa especialidade é a costela sem osso assada no papel celofane, feita desde às 5h da manhã.</p>
   </section>
 
-  <!-- Rodapé -->
+  <!-- Footer -->
   <footer>
-    <p>📍 Rua República Islâmica do Irã, 330 - Curitiba/PR</p>
+    <p>📍 Rua República Islâmica do Irã, 330 - Jardim das Américas - Curitiba/PR</p>
     <p>📞 WhatsApp: <a href="https://wa.me/5541988738707">41 98873-8707</a></p>
     <p>⏰ Sáb: 10h–14h | Dom: 10h–16h</p>
     <p>© 2025 Braz Grill Assados</p>
@@ -322,8 +286,10 @@ nav ul a:hover {
     <img src="mascote.png" alt="Mascote Braz Grill" />
   </div>
 
-  <!-- WhatsApp -->
-  <a href="https://wa.me/5541988738707?text=Olá! Gostaria de fazer uma reserva." class="whatsapp-float" target="_blank">
+  <!-- WhatsApp Flutuante -->
+  <a href="https://wa.me/5541988738707?text=Olá! Gostaria de fazer uma reserva."
+     class="whatsapp-float"
+     target="_blank">
     <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
     <span>Faça uma reserva</span>
   </a>
