@@ -155,25 +155,51 @@
       transform: scale(0.9);
     }
 
-    .grid-img {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 32px;
+    /* Novo estilo para a seção com vídeo e imagens */
+    .video-imagens-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
       max-width: 960px;
       margin: 0 auto;
+      align-items: center;
     }
 
-    .grid-img img {
+    .video-container {
+      flex: 1;
+      min-width: 300px;
+      max-width: 480px;
+    }
+
+    .video-container video {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .imagens-container {
+      flex: 1;
+      min-width: 300px;
+      max-width: 480px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .imagens-container img {
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 100%;
-      margin: auto;
+      height: auto;
     }
 
-    @media (min-width: 768px) {
-      .grid-img {
-        grid-template-columns: 1fr 1fr;
+    @media (max-width: 768px) {
+      .video-imagens-container {
+        flex-direction: column;
+      }
+      .video-container, .imagens-container {
+        max-width: 100%;
       }
     }
 
@@ -304,9 +330,17 @@
     </section>
 
     <section class="bg-yellow">
-      <div class="grid-img">
-        <img src="imagem1.jpg" alt="Assado 1" />
-        <img src="imagem2.jpg" alt="Assado 2" />
+      <div class="video-imagens-container">
+        <div class="video-container">
+          <video autoplay muted loop>
+            <source src="carnes.mp4" type="video/mp4">
+            Seu navegador não suporta vídeos.
+          </video>
+        </div>
+        <div class="imagens-container">
+          <img src="imagem1.jpg" alt="Assado 1" />
+          <img src="imagem2.jpg" alt="Assado 2" />
+        </div>
       </div>
     </section>
 
