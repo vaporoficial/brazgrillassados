@@ -1,517 +1,1365 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Braz Grill Assados</title>
+  <title>Braz Grill Assados - Churrasco Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
-      font-family: sans-serif;
-      color: #1f2937;
-      scroll-behavior: smooth;
-      background-image: url('f.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+    :root {
+      --primary: #e30613;
+      --primary-dark: #b91c1c;
+      --secondary: #f8b405;
+      --dark: #1a1a1a;
+      --light: #ffffff;
+      --gray: #f5f5f5;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
+      background-color: var(--light);
+      overflow-x: hidden;
     }
 
     .main-content {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       position: relative;
       z-index: 10;
-      background-color: rgba(255,255,255,0.9);
+      background-color: var(--light);
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
     }
 
-    nav {
-      background-color: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    /* Header Moderno */
+    header {
+      background-color: var(--light);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 100;
     }
 
-    .nav-container {
-      max-width: 1120px;
+    .header-container {
+      max-width: 1400px;
       margin: 0 auto;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      padding: 12px 16px;
+      padding: 15px 30px;
     }
 
     .logo {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 15px;
     }
 
     .logo img {
-      height: 60px;
-      width: 60px;
+      height: 70px;
+      width: 70px;
       border-radius: 50%;
-      box-shadow: 0 0 4px rgba(0,0,0,0.2);
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: var(--transition);
     }
 
-    .logo h1 {
+    .logo:hover img {
+      transform: rotate(15deg);
+    }
+
+    .logo-text h1 {
       margin: 0;
-      font-size: 20px;
-      font-weight: bold;
-      color: #b91c1c;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .logo-text span {
+      display: block;
+      font-size: 14px;
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    /* Menu Hamburguer para mobile */
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .menu-toggle i {
+      font-size: 24px;
+      color: var(--primary);
     }
 
     .nav-menu {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 16px;
-      gap: 20px;
+      gap: 25px;
     }
     
     .nav-menu a {
       text-decoration: none;
-      color: #374151;
+      color: var(--dark);
       font-weight: 600;
-      font-size: 27px; /* Tamanho aumentado para 27px */
-      transition: color 0.3s;
-      white-space: nowrap;
+      font-size: 16px;
+      transition: var(--transition);
+      position: relative;
+      padding: 5px 0;
     }
     
     .nav-menu a:hover {
-      color: #b91c1c;
-    }
-    
-    @media (max-width: 1024px) {
-      .nav-menu {
-        gap: 15px;
-      }
-      
-      .nav-menu a {
-        font-size: 22px; /* Tamanho reduzido para tablets */
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .nav-menu {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-      }
-      
-      .nav-menu a {
-        font-size: 18px; /* Tamanho para mobile */
-      }
+      color: var(--primary);
     }
 
-    section {
-      padding: 48px 16px;
-      text-align: center;
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--primary);
+      transition: var(--transition);
     }
 
-    h1, h2 {
-      font-weight: bold;
-      margin-bottom: 16px;
+    .nav-menu a:hover::after {
+      width: 100%;
     }
 
-    h1 { font-size: 32px; }
-    h2 { font-size: 24px; }
-
-    p {
-      font-size: 16px;
-      color: #374151;
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 80vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('cardapio/loja.jpg') center/cover no-repeat;
     }
 
+    .hero-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1400px;
+      padding: 0 30px;
+      flex-wrap: wrap;
+    }
+
+    .hero-content {
+      flex: 1;
+      max-width: 600px;
+      color: var(--light);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-content h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .hero-content p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .hero-video-container {
+      flex: 0 0 auto;
+      max-width: 300px;
+    }
+
+    .hero-video {
+      width: 100%;
+      max-width: 300px;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Botões */
     .btn {
-      display: inline-block;
-      margin-top: 24px;
-      background-color: #dc2626;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 28px;
+      border-radius: 50px;
       font-weight: 600;
       text-decoration: none;
-      transition: background-color 0.3s ease;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      gap: 8px;
     }
 
-    .btn:hover {
-      background-color: #b91c1c;
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--light);
+      box-shadow: 0 4px 15px rgba(227, 6, 19, 0.3);
     }
 
-    .hero img,
-    .bebidas img,
-    .cardapio img {
-      width: 100%;
-      max-width: 768px;
-      margin: 0 auto 24px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: block;
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(227, 6, 19, 0.4);
     }
 
-    .bebidas img {
-      transform: scale(0.9);
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--dark);
+      box-shadow: 0 4px 15px rgba(248, 180, 5, 0.3);
     }
 
-    /* Novo estilo para a seção com vídeo e imagens */
-    .video-imagens-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      max-width: 960px;
-      margin: 0 auto;
-      align-items: center;
+    .btn-secondary:hover {
+      background-color: #e6a905;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(248, 180, 5, 0.4);
     }
 
-    .video-container {
-      flex: 1;
-      min-width: 300px;
-      max-width: 480px;
+    .btn-wifi {
+      background-color: #4CAF50;
+      color: var(--light);
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
     }
 
-    .video-container video {
-      width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    .btn-wifi:hover {
+      background-color: #45a049;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
 
-    .imagens-container {
-      flex: 1;
-      min-width: 300px;
-      max-width: 480px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
+    /* Seções */
+    section {
+      padding: 80px 30px;
+      position: relative;
     }
 
-    .imagens-container img {
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 100%;
-      height: auto;
-    }
-
-    @media (max-width: 768px) {
-      .video-imagens-container {
-        flex-direction: column;
-      }
-      .video-container, .imagens-container {
-        max-width: 100%;
-      }
-    }
-
-    footer {
-      background-color: #b91c1c;
-      color: white;
+    .section-title {
       text-align: center;
-      padding: 24px 16px;
+      margin-bottom: 60px;
     }
 
-    footer p {
-      margin: 8px 0;
+    .section-title h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
     }
 
-    footer a {
-      color: white;
-      text-decoration: underline;
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background-color: var(--secondary);
+      border-radius: 2px;
     }
 
-    .bg-yellow { background-color: #fef3c7; }
-    .bg-red-light { background-color: #fef2f2; }
-
-    .whatsapp-float {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      align-items: center;
-      background-color: #25D366;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 40px;
-      text-decoration: none;
-      font-family: Arial, sans-serif;
-      font-size: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      transition: transform 0.3s ease, background-color 0.3s ease;
-    }
-
-    .whatsapp-float:hover {
-      background-color: #128C7E;
-      transform: scale(1.15);
-    }
-
-    .whatsapp-float img {
-      width: 36px;
-      height: 36px;
-      margin-right: 10px;
-    }
-
-    .whatsapp-mascote {
-      position: fixed;
-      bottom: 80px;
-      right: 20px;
-      z-index: 1001;
-    }
-
-    .whatsapp-mascote img {
-      width: 210px;
-      border-radius: 12px;
-    }
-
-    .video-lateral-esquerda,
-    .video-lateral-direita {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      width: 160px;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.5;
-    }
-
-    .video-lateral-esquerda { left: 0; }
-    .video-lateral-direita { right: 0; }
-
-    @media (max-width: 1024px) {
-      .video-lateral-esquerda,
-      .video-lateral-direita {
-        display: none;
-      }
-      .main-content {
-        margin: 0;
-        background-color: rgba(255,255,255,0.95);
-      }
-    }
-
-    /* Estilos adicionais para as seções de carnes */
-    .menu-category {
-      max-width: 800px;
+    .section-title p {
+      font-size: 18px;
+      color: #555;
+      max-width: 700px;
       margin: 0 auto;
-      text-align: left;
+    }
+
+    /* Cardápio */
+    .menu-category {
+      margin-bottom: 50px;
+    }
+
+    .category-description {
+      text-align: center;
+      margin-bottom: 30px;
+      font-style: italic;
+      color: #666;
+    }
+
+    .menu-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
     }
 
     .menu-item {
-      margin-bottom: 30px;
+      background-color: var(--light);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: var(--transition);
+      display: flex;
     }
 
-    .menu-item h3 {
-      color: #b91c1c;
-      font-size: 20px;
-      margin-bottom: 8px;
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
-    .menu-item p {
-      margin-bottom: 8px;
+    .menu-item-img {
+      flex: 0 0 150px;
+      height: 150px;
+    }
+
+    .menu-item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .menu-item-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .menu-item-content h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+
+    .menu-item-content p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
       line-height: 1.5;
     }
 
     .menu-price {
-      font-weight: bold;
-      color: #b91c1c;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 18px;
+    }
+
+    /* Acompanhamentos */
+    .acompanhamentos-category {
+      background-color: #fff9e6;
+      padding: 30px;
+      border-radius: 12px;
+      margin-top: 40px;
+    }
+
+    /* Galeria */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 250px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-overlay h4 {
+      color: var(--light);
+      font-size: 16px;
+    }
+
+    /* Depoimentos */
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .testimonial-item {
+      background-color: var(--light);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: var(--transition);
+    }
+
+    .testimonial-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .testimonial-item p {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .testimonial-author img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .testimonial-author span {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Contato e Mapa */
+    .contact-section {
+      background-color: var(--gray);
+      padding: 80px 0;
+    }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      padding: 0 30px;
+    }
+
+    .contact-info h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .contact-info p {
+      margin-bottom: 15px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .contact-info i {
+      color: var(--primary);
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: var(--primary);
+      color: var(--light);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+
+    .map-container {
+      height: 400px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--dark);
+      color: var(--light);
+      padding: 50px 0 20px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      padding: 0 30px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background-color: var(--primary);
+    }
+
+    .footer-col p {
+      margin-bottom: 15px;
+      opacity: 0.8;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: var(--light);
+      opacity: 0.8;
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
+      color: var(--primary);
+      padding-left: 5px;
+    }
+
+    .footer-links i {
+      font-size: 12px;
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 30px;
+      margin-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    /* Botão WhatsApp Flutuante */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      background-color: #25D366;
+      color: var(--light);
+      padding: 15px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .whatsapp-float:hover {
+      background-color: #128C7E;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
+    }
+
+    .whatsapp-float i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    /* Mascote Animado */
+    .mascote {
+      position: fixed;
+      bottom: 120px;
+      right: 30px;
+      z-index: 999;
+      transition: var(--transition);
+    }
+
+    .mascote img {
+      width: 150px;
+      height: auto;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transform-origin: bottom center;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .mascote:hover {
+      transform: scale(1.1);
+    }
+
+    /* Responsividade */
+    @media (max-width: 1200px) {
+      .hero-content h1 {
+        font-size: 42px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .header-container {
+        padding: 15px 20px;
+      }
+
+      .nav-menu {
+        gap: 15px;
+      }
+
+      .contact-container {
+        grid-template-columns: 1fr;
+      }
+
+      .map-container {
+        height: 300px;
+      }
+
+      .hero-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-video-container {
+        margin-top: 20px;
+        max-width: 100%;
+      }
+
+      .hero-video {
+        max-width: 100%;
+        height: 400px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 100px;
+        left: -100%;
+        width: 80%;
+        height: calc(100vh - 100px);
+        background-color: var(--light);
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 40px 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: var(--transition);
+        z-index: 99;
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .hero {
+        height: auto;
+        min-height: auto;
+        padding: 100px 0;
+      }
+
+      .hero-content {
+        text-align: center;
+        max-width: 100%;
+      }
+
+      .hero-content h1 {
+        font-size: 36px;
+      }
+
+      .section-title h2 {
+        font-size: 30px;
+      }
+
+      .menu-items {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-item-img {
+        flex: 0 0 120px;
+        height: 120px;
+      }
+
+      .mascote {
+        display: none;
+      }
+
+      .whatsapp-float {
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 15px;
+      }
+
+      .whatsapp-float span {
+        display: none;
+      }
+
+      .hero-video {
+        height: 300px;
+      }
+
+      .testimonials {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .logo img {
+        height: 50px;
+        width: 50px;
+      }
+
+      .logo-text h1 {
+        font-size: 20px;
+      }
+
+      .hero-content h1 {
+        font-size: 30px;
+      }
+
+      .section-title h2 {
+        font-size: 26px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .menu-item {
+        flex-direction: column;
+      }
+
+      .menu-item-img {
+        flex: 0 0 150px;
+        height: 150px;
+        width: 100%;
+      }
+
+      .hero-video {
+        height: 200px;
+      }
     }
   </style>
 </head>
 <body>
-
-  <video autoplay muted loop class="video-lateral-esquerda">
-    <source src="video-esquerdo.mp4" type="video/mp4" />
-    Seu navegador não suporta vídeo.
-  </video>
-
-  <video autoplay muted loop class="video-lateral-direita">
-    <source src="video-direito.mp4" type="video/mp4" />
-    Seu navegador não suporta vídeo.
-  </video>
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+      return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row => row.some(filledCell));
+          var headerRowIndex = filteredData.findIndex((row, index) =>
+            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+          );
+          if (headerRowIndex === -1 || headerRowIndex > 25) {
+            headerRowIndex = 0;
+          }
+          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
 
   <div class="main-content">
-    <nav>
-      <div class="nav-container">
+    <header>
+      <div class="header-container">
         <div class="logo">
-          <img src="logo.png" alt="Logo Braz Grill" />
-          <h1>Braz Grill Assados</h1>
+          <img src="logo.png" alt="Braz Grill Assados" />
+          <div class="logo-text">
+            <h1>BRAZ GRILL</h1>
+            <span>Assados Premium</span>
+          </div>
         </div>
 
-        <div class="nav-menu">
+        <div class="menu-toggle" id="menuToggle">
+          <i class="fas fa-bars"></i>
+        </div>
+
+        <nav class="nav-menu" id="navMenu">
           <a href="#home">Home</a>
           <a href="#cardapio">Cardápio</a>
           <a href="#bebidas">Bebidas</a>
-          <a href="#bovinas">Carnes Bovinas</a>
-          <a href="#suinas">Carnes Suínas</a>
-          <a href="#frangos">Frangos</a>
-          <a href="#sobre">Sobre Nós</a>
-        </div>
+          <a href="#acompanhamentos">Acompanhamentos</a>
+          <a href="#contato">Contato</a>
+        </nav>
       </div>
-    </nav>
+    </header>
 
-    <section id="home" class="hero" style="background-color: white;">
-      <img src="hero.jpg" alt="Churrasco de qualidade" />
-      <h1>Assados com sabor de verdade</h1>
-      <p>Carnes selecionadas, temperos caseiros e atendimento de primeira!</p>
-      <a href="#cardapio" class="btn">Ver Cardápio</a>
-    </section>
-
-    <section class="bg-yellow">
-      <div class="video-imagens-container">
-        <div class="video-container">
-          <video autoplay muted loop>
-            <source src="carnes.mp4" type="video/mp4">
-            Seu navegador não suporta vídeos.
+    <section id="home" class="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1>O verdadeiro sabor do churrasco gaúcho</h1>
+          <p>Carnes selecionadas, temperos especiais e um toque caseiro que faz toda a diferença. Há mais de 20 anos levando qualidade à sua mesa.</p>
+          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="#cardapio" class="btn btn-primary">
+              <i class="fas fa-utensils"></i> Ver Cardápio
+            </a>
+            <a href="https://wa.me/5541988738707" class="btn btn-secondary" target="_blank">
+              <i class="fab fa-whatsapp"></i> Fazer Pedido
+            </a>
+            <a href="WIFI:S:brazgrillassados;T:WPA;P:melhor assado;;" class="btn btn-wifi">
+              <i class="fas fa-wifi"></i> Conectar ao Wi-Fi
+            </a>
+          </div>
+        </div>
+        <div class="hero-video-container">
+          <video class="hero-video" controls muted>
+            <source src="videos/churrasco.mp4" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
           </video>
         </div>
-        <div class="imagens-container">
-          <img src="imagem1.jpg" alt="Assado 1" />
-          <img src="imagem2.jpg" alt="Assado 2" />
+      </div>
+    </section>
+
+    <section id="cardapio" style="background-color: var(--gray);">
+      <div class="section-title">
+        <h2>Nosso Cardápio</h2>
+        <p>Todos os nossos pratos são preparados diariamente com ingredientes frescos e selecionados</p>
+      </div>
+
+      <!-- Carnes Bovinas -->
+      <div class="menu-category" id="bovinas">
+        <h3>Carnes Bovinas</h3>
+        <p class="category-description">Costela, fraldinha e cupim feitos no ponto perfeito.</p>
+        
+        <div class="menu-items">
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/costela.jpg" alt="Costela de Boi">
+            </div>
+            <div class="menu-item-content">
+              <h4>Costela de Boi Sem Osso</h4>
+              <p>Uma costela suculenta, assada lentamente em papel celofane para reter todos os sabores. O resultado é uma carne tão macia que desmancha na boca, com um toque defumado irresistível.</p>
+              <div class="menu-price">R$ 68,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/fraldinha.jpg" alt="Fraldinha">
+            </div>
+            <div class="menu-item-content">
+              <h4>Fraldinha</h4>
+              <p>Corte nobre e saboroso, a fraldinha é assada em papel celofane até ficar perfeitamente macia e desfiável. Cada pedaço é uma explosão de suculência e aroma.</p>
+              <div class="menu-price">R$ 78,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/cupim.jpg" alt="Cupim">
+            </div>
+            <div class="menu-item-content">
+              <h4>Cupim</h4>
+              <p>O cupim, conhecido por sua gordura marmorizada, é assado no papel celofane até atingir uma textura incrivelmente macia e um sabor rico e marcante.</p>
+              <div class="menu-price">R$ 75,00 kg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Frangos -->
+      <div class="menu-category" id="frangos">
+        <h3>Frangos</h3>
+        <p class="category-description">Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
+        
+        <div class="menu-items">
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/frango-recheado.jpg" alt="Frango Recheado">
+            </div>
+            <div class="menu-item-content">
+              <h4>Frango com ou sem Recheio</h4>
+              <p>Frango inteiro, recheado com uma farofa de milho artesanal ou servido simples. Assado até a pele ficar dourada e crocante, com a carne suculenta por dentro.</p>
+              <div class="menu-price">R$ 45,00 a unidade</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/frango-desossado.jpg" alt="Frango Desossado">
+            </div>
+            <div class="menu-item-content">
+              <h4>Frango Desossado</h4>
+              <p>Carne de frango desfiada e recheada com arroz colorido ou farofa de milho, perfeita para quem busca praticidade sem abrir mão do sabor.</p>
+              <div class="menu-price">R$ 55,00 a unidade</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/meio-frango.jpg" alt="Meio Frango">
+            </div>
+            <div class="menu-item-content">
+              <h4>Meio Frango</h4>
+              <p>Metade de um frango assado, com a pele crocante e a carne suculenta, ideal para quem deseja uma refeição rápida e deliciosa.</p>
+              <div class="menu-price">R$ 22,00 a unidade</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/coxa-sobrecoxa.jpg" alt="Coxa com Sobrecoxa">
+            </div>
+            <div class="menu-item-content">
+              <h4>Coxa com Sobrecoxa</h4>
+              <p>Corte perfeito para os amantes de carne escura: coxa e sobrecoxa assadas até ficarem douradas e suculentas.</p>
+              <div class="menu-price">R$ 38,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/medalhao-frango.jpg" alt="Medalhão de Frango">
+            </div>
+            <div class="menu-item-content">
+              <h4>Medalhão de Frango</h4>
+              <p>Peito de frango envolto em fatias de bacon, assado até ficar com uma crosta caramelizada e o interior macio e saboroso.</p>
+              <div class="menu-price">R$ 75,00 kg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carnes Suínas -->
+      <div class="menu-category" id="suinas">
+        <h3>Carnes Suínas</h3>
+        <p class="category-description">Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
+        
+        <div class="menu-items">
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/costelinha.jpg" alt="Costelinha Pururuca">
+            </div>
+            <div class="menu-item-content">
+              <h4>Costelinha Pururuca</h4>
+              <p>Costelinha de porco assada até a pele ficar estaladiça (pururuca), com a carne tão macia que se solta do osso.</p>
+              <div class="menu-price">R$ 68,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/copa-lombo.jpg" alt="Copa Lombo">
+            </div>
+            <div class="menu-item-content">
+              <h4>Copa Lombo</h4>
+              <p>Corte suíno suculento e saboroso, assado lentamente para garantir maciez e um sabor inigualável.</p>
+              <div class="menu-price">R$ 68,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/paleta.jpg" alt="Paleta Suína">
+            </div>
+            <div class="menu-item-content">
+              <h4>Paleta Suína</h4>
+              <p>Paleta de porco preparada no estilo pururuca, com a pele crocante e a carne desfiável, repleta de temperos especiais.</p>
+              <div class="menu-price">R$ 48,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/joelho.jpg" alt="Joelho Eisbein">
+            </div>
+            <div class="menu-item-content">
+              <h4>Joelho Eisbein</h4>
+              <p>Joelho suíno assado até a pele ficar crocante e a carne macia, uma combinação perfeita de texturas e sabores.</p>
+              <div class="menu-price">R$ 48,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/linguica.jpg" alt="Linguiça de Pernil e Lombo">
+            </div>
+            <div class="menu-item-content">
+              <h4>Linguiça de Pernil e Lombo</h4>
+              <p>Linguiça artesanal feita com cortes nobres de pernil e lombo, defumada e assada para realçar seu sabor único.</p>
+              <div class="menu-price">R$ 38,00 kg</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/medalhao-suino.jpg" alt="Medalhão Suíno">
+            </div>
+            <div class="menu-item-content">
+              <h4>Medalhão Suíno</h4>
+              <p>Copa lombo envolta em bacon, assada até ficar com uma crosta dourada e o interior suculento e cheio de sabor.</p>
+              <div class="menu-price">R$ 75,00 kg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acompanhamentos -->
+      <div class="menu-category acompanhamentos-category" id="acompanhamentos">
+        <h3>Acompanhamentos Especiais</h3>
+        <p class="category-description">Complementos perfeitos para realçar o sabor dos nossos assados.</p>
+        
+        <div class="menu-items">
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/maionese.jpg" alt="Maionese Caseira">
+            </div>
+            <div class="menu-item-content">
+              <h4>Maionese Caseira</h4>
+              <p>Nossa maionese artesanal é feita com leite fresco, batata e óleo de qualidade, resultando em um creme leve e saboroso que combina perfeitamente com todos os nossos assados.</p>
+              <div class="menu-price">R$ 12,00 porção</div>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/farofa.jpg" alt="Farofa de Paçoca de Carne">
+            </div>
+            <div class="menu-item-content">
+              <h4>Farofa de Paçoca de Carne</h4>
+              <p>Farofa crocante preparada com toucinho de porco e carne seca, uma receita tradicional que traz um toque especial ao seu prato.</p>
+              <div class="menu-price">R$ 15,00 porção</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="cardapio" class="cardapio" style="background-color: white;">
-      <h2>Cardápio Completo</h2>
-      <img src="cardapio.jpg" alt="Cardápio Braz Grill" />
-    </section>
+    <section id="bebidas">
+      <div class="section-title">
+        <h2>Bebidas</h2>
+        <p>Acompanhe seu churrasco com nossas bebidas selecionadas</p>
+      </div>
 
-    <section id="bovinas" class="bg-yellow">
-      <h2>Carnes Bovinas</h2>
-      <p>Costela, fraldinha e cupim feitos no ponto perfeito.</p>
-      
-      <div class="menu-category">
-        <div class="menu-item">
-          <h3>Costela de Boi Sem Osso</h3>
-          <p>Uma costela suculenta, assada lentamente em papel celofane para reter todos os sabores. O resultado é uma carne tão macia que desmancha na boca, com um toque defumado irresistível.</p>
-          <p class="menu-price">R$ 68,00 kg</p>
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="bebidas/cervejas.jpg" alt="Cervejas">
+          <div class="gallery-overlay">
+            <h4>Cervejas Artesanais</h4>
+          </div>
         </div>
-        
-        <div class="menu-item">
-          <h3>Fraldinha</h3>
-          <p>Corte nobre e saboroso, a fraldinha é assada em papel celofane até ficar perfeitamente macia e desfiável. Cada pedaço é uma explosão de suculência e aroma.</p>
-          <p class="menu-price">R$ 75,00 kg</p>
+        <div class="gallery-item">
+          <img src="bebidas/refrigerantes.jpg" alt="Refrigerantes">
+          <div class="gallery-overlay">
+            <h4>Refrigerantes</h4>
+          </div>
         </div>
-        
-        <div class="menu-item">
-          <h3>Cupim</h3>
-          <p>O cupim, conhecido por sua gordura marmorizada, é assado no papel celofane até atingir uma textura incrivelmente macia e um sabor rico e marcante.</p>
-          <p class="menu-price">R$ 75,00 kg</p>
+        <div class="gallery-item">
+          <img src="bebidas/sucos.jpg" alt="Sucos Naturais">
+          <div class="gallery-overlay">
+            <h4>Sucos Naturais</h4>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="beb877idas/vinhos.jpg" alt="Vinhos">
+          <div class="gallery-overlay">
+            <h4>Vinhos Selecionados</h4>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="frangos" class="bg-yellow">
-      <h2>Frangos</h2>
-      <p>Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
-      
-      <div class="menu-category">
-        <div class="menu-item">
-          <h3>Frango com ou sem Recheio</h3>
-          <p>Frango inteiro, recheado com uma farofa de milho artesanal ou servido simples. Assado até a pele ficar dourada e crocante, com a carne suculenta por dentro.</p>
-          <p class="menu-price">R$ 42,00 a unidade</p>
+    <section id="depoimentos">
+      <div class="section-title">
+        <h2>Comentários no Google Maps</h2>
+        <p>Veja o que nossos clientes estão dizendo sobre nós no Google Maps!</p>
+      </div>
+
+      <div class="testimonials">
+        <div class="testimonial-item">
+          <p>"Melhor churrasco de Curitiba! As carnes são sempre frescas e muito bem preparadas. A costelinha pururuca é simplesmente incrível!"</p>
+          <div class="testimonial-author">
+            <img src="avatars/avatar1.jpg" alt="João Silva">
+            <span>João Silva</span>
+          </div>
         </div>
-        
-        <div class="menu-item">
-          <h3>Frango Desfiado Recheado</h3>
-          <p>Carne de frango desfiada e recheada com arroz colorido ou farofa de milho, perfeita para quem busca praticidade sem abrir mão do sabor.</p>
-          <p class="menu-price">R$ 21,00 a unidade</p>
+
+        <div class="testimonial-item">
+          <p>"Atendimento excepcional e comida de altíssima qualidade. A maionese caseira é um diferencial que faz toda a diferença!"</p>
+          <div class="testimonial-author">
+            <img src="avatars/avatar2.jpg" alt="Maria Oliveira">
+            <span>Maria Oliveira</span>
+          </div>
         </div>
-        
-        <div class="menu-item">
-          <h3>Meio Frango</h3>
-          <p>Metade de um frango assado, com a pele crocante e a carne suculenta, ideal para quem deseja uma refeição rápida e deliciosa.</p>
-          <p class="menu-price">R$ 38,00 kg</p>
-        </div>
-        
-        <div class="menu-item">
-          <h3>Coxa com Sobrecoxa</h3>
-          <p>Corte perfeito para os amantes de carne escura: coxa e sobrecoxa assadas até ficarem douradas e suculentas.</p>
-          <p class="menu-price">R$ 75,00 kg</p>
-        </div>
-        
-        <div class="menu-item">
-          <h3>Medalhão de Frango</h3>
-          <p>Peito de frango envolto em fatias de bacon, assado até ficar com uma crosta caramelizada e o interior macio e saboroso.</p>
-          <p class="menu-price">R$ 75,00 kg</p>
+
+        <div class="testimonial-item">
+          <p>"Ambiente acolhedor e carnes no ponto perfeito. Recomendo o frango recheado, é uma delícia! Sempre volto."</p>
+          <div class="testimonial-author">
+            <img src="avatars/avatar3.jpg" alt="Carlos Souza">
+            <span>Carlos Souza</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="suinas" style="background-color: white;">
-      <h2>Carnes Suínas</h2>
-      <p>Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
-      
-      <div class="menu-category">
-        <div class="menu-item">
-          <h3>Costelinha Pururuca</h3>
-          <p>Costelinha de porco assada até a pele ficar estaladiça (pururuca), com a carne tão macia que se solta do osso.</p>
-          <p class="menu-price">R$ 48,00 kg</p>
+    <section id="contato" class="contact-section">
+      <div class="contact-container">
+        <div class="contact-info">
+          <h3>Entre em Contato</h3>
+          <p><i class="fas fa-map-marker-alt"></i> Rua República Islâmica do Irã, 330 - Jardim das Américas, Curitiba/PR</p>
+          <p><i class="fas fa-phone-alt"></i> <a href="tel:+5541988738707">(41) 98873-8707</a></p>
+          <p><i class="fas fa-clock"></i> Sábado: 10h às 14h<br>Domingo: 10h às 16h</p>
+          
+          <div class="social-links">
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/5541988738707" target="_blank"><i class="fab fa-whatsapp"></i></a>
+          </div>
         </div>
-        
-        <div class="menu-item">
-          <h3>Copa Lombo</h3>
-          <p>Corte suíno suculento e saboroso, assado lentamente para garantir maciez e um sabor inigualável.</p>
-          <p class="menu-price">R$ 48,00 kg</p>
-        </div>
-        
-        <div class="menu-item">
-          <h3>Paleta Suína</h3>
-          <p>Paleta de porco preparada no estilo pururuca, com a pele crocante e a carne desfiável, repleta de temperos especiais.</p>
-          <p class="menu-price">R$ 48,00 kg</p>
-        </div>
-        
-        <div class="menu-item">
-          <h3>Joelho Eisbein</h3>
-          <p>Joelho suíno assado até a pele ficar crocante e a carne macia, uma combinação perfeita de texturas e sabores.</p>
-          <p class="menu-price">R$ 48,00 kg</p>
-        </div>
-        
-        <div class="menu-item">
-          <h3>Linguiça de Pernil e Lombo</h3>
-          <p>Linguiça artesanal feita com cortes nobres de pernil e lombo, defumada e assada para realçar seu sabor único.</p>
-          <p class="menu-price">R$ 48,00 kg</p>
-        </div>
-        
-        <div class="menu-item">
-          <h3>Medalhão Suíno</h3>
-          <p>Copa lombo envolta em bacon, assada até ficar com uma crosta dourada e o interior suculento e cheio de sabor.</p>
-          <p class="menu-price">R$ 48,00 kg</p>
+
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3602.238540189611!2d-49.23466892433548!3d-25.45926863333083!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dce472f8f33f0f%3A0x6e7e3e3e3e3e3e3e!2sRua%20Rep%C3%BAblica%20Isl%C3%A2mica%20do%20Ir%C3%A3%2C%20330%20-%20Jardim%20das%20Am%C3%A9ricas%2C%20Curitiba%20-%20PR%2C%2081530-180!5e0!3m2!1spt-BR!2sbr!4v1620000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
         </div>
       </div>
-    </section>
-
-    <section id="bebidas" class="bebidas" style="background-color: white;">
-      <h2>Bebidas</h2>
-      <img src="bebidas.jpg" alt="Cardápio Bebidas" />
-      <p>Em breve! Bebidas geladas para acompanhar seu assado.</p>
-    </section>
-
-    <section id="sobre" class="bg-red-light">
-      <h2>Sobre Nós</h2>
-      <p style="max-width: 640px; margin: 0 auto;">
-        Assamos todos os tipos de carnes, bovinos, suínos e frangos. Nosso diferencial está no tempo de preparo: começamos às 5h da manhã, o que proporciona melhor sabor e suculência. Nossa costela sem osso assada no celofane é destaque. Há 23 anos no mercado, nossa prioridade é você. Seja bem-vindo!
-      </p>
     </section>
 
     <footer>
-      <p>📍 Rua República Islâmica do Irã, 330 - Jardim das Américas - Curitiba/PR</p>
-      <p>📞 WhatsApp: <a href="https://wa.me/5541988738707">41 98873-8707</a></p>
-      <p>⏰ Sáb: 10h–14h | Dom: 10h–16h</p>
-      <p class="text-sm">© 2025 Braz Grill Assados</p>
+      <div class="footer-container">
+        <div class="footer-col">
+          <h4>Sobre Nós</h4>
+          <p>Há mais de 20 anos no mercado, o Braz Grill se dedica a oferecer os melhores assados com qualidade e tradição.</p>
+          <p>Começamos nosso preparo às 5h da manhã para garantir o melhor sabor e suculência em nossos pratos.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Horário de Funcionamento</h4>
+          <p><strong>Sábado:</strong> 10h às 14h</p>
+          <p><strong>Domingo:</strong> 10h às 16h</p>
+          <p>Atendemos também para eventos especiais.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Links Rápidos</h4>
+          <ul class="footer-links">
+            <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+            <li><a href="#cardapio"><i class="fas fa-chevron-right"></i> Cardápio</a></li>
+            <li><a href="#bebidas"><i class="fas fa-chevron-right"></i> Bebidas</a></li>
+            <li><a href="#acompanhamentos"><i class="fas fa-chevron-right"></i> Acompanhamentos</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>© 2023 Braz Grill Assados. Todos os direitos reservados.</p>
+      </div>
     </footer>
-
-    <div class="whatsapp-mascote">
-      <img src="mascote.png" alt="Mascote Braz Grill" />
-    </div>
-
-    <a href="https://wa.me/5541988738707?text=Olá! Gostaria de fazer uma reserva." 
-       class="whatsapp-float" 
-       target="_blank">
-      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
-      <span class="whatsapp-msg">Faça uma reserva</span>
-    </a>
   </div>
 
+  <div class="mascote">
+    <img src="mascote.png" alt="Mascote Braz Grill">
+  </div>
+
+  <a href="https://wa.me/5541988738707?text=Olá! Gostaria de fazer um pedido." 
+     class="whatsapp-float" 
+     target="_blank">
+    <i class="fab fa-whatsapp"></i>
+    <span>Pedir pelo WhatsApp</span>
+  </a>
+
+  <script>
+    // Menu Mobile
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      menuToggle.innerHTML = navMenu.classList.contains('active') 
+        ? '<i class="fas fa-times"></i>' 
+        : '<i class="fas fa-bars"></i>';
+    });
+
+    // Fechar menu ao clicar em um link
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+      });
+    });
+
+    // Scroll suave
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Animação ao rolar
+    const animateOnScroll = () => {
+      const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
+      
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.2;
+        
+        if (elementPosition < screenPosition) {
+          element.style.opacity = '1';
+          element.style.transform = 'translateY(0)';
+        }
+      });
+    };
+
+    // Inicializar elementos com opacidade 0 para animação
+    window.addEventListener('DOMContentLoaded', () => {
+      const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
+      elements.forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      });
+      
+      // Forçar redesenho
+      void elements[0].offsetHeight;
+      
+      animateOnScroll();
+    });
+
+    window.addEventListener('scroll', animateOnScroll);
+  </script>
 </body>
 </html>
