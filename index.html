@@ -236,6 +236,34 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
+    /* Wi-Fi Dialog */
+    .wifi-dialog {
+      display: none;
+      position: absolute;
+      background-color: var(--light);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      z-index: 10;
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .btn-wifi:hover + .wifi-dialog,
+    .wifi-dialog:hover {
+      display: block;
+    }
+
+    .wifi-dialog p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: var(--dark);
+    }
+
+    .wifi-dialog strong {
+      color: var(--primary);
+    }
+
     /* Botões */
     .btn {
       display: inline-flex;
@@ -249,6 +277,7 @@
       border: none;
       cursor: pointer;
       gap: 8px;
+      position: relative;
     }
 
     .btn-primary {
@@ -332,11 +361,13 @@
       margin-bottom: 50px;
     }
 
-    .category-description {
-      text-align: center;
-      margin-bottom: 30px;
-      font-style: italic;
-      color: #666;
+    .kiosk {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .menu-items {
@@ -355,24 +386,28 @@
     }
 
     .menu-item:hover {
-      transform: translateY(-5px);
+      transform: translateY(-5px) scale(2);
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      z-index: 10;
     }
 
     .menu-item-img {
       flex: 0 0 150px;
       height: 150px;
+      transition: var(--transition);
     }
 
     .menu-item-img img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: var(--transition);
     }
 
     .menu-item-content {
       flex: 1;
       padding: 20px;
+      transition: var(--transition);
     }
 
     .menu-item-content h4 {
@@ -819,11 +854,18 @@
       }
 
       .hero-video {
-        height: 300px;
+        height: 400px;
+        max-width: 100%;
       }
 
       .testimonials {
         grid-template-columns: 1fr;
+      }
+
+      .menu-item:active {
+        transform: scale(2);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        z-index: 10;
       }
     }
 
@@ -861,7 +903,8 @@
       }
 
       .hero-video {
-        height: 200px;
+        height: 300px;
+        max-width: 100%;
       }
     }
   </style>
@@ -940,6 +983,10 @@
             <a href="WIFI:S:brazgrillassados;T:WPA;P:melhor assado;;" class="btn btn-wifi">
               <i class="fas fa-wifi"></i> Conectar ao Wi-Fi
             </a>
+            <div class="wifi-dialog">
+              <p><strong>Nome da Rede:</strong> brazgrillassados</p>
+              <p><strong>Senha:</strong> melhor assado</p>
+            </div>
           </div>
         </div>
         <div class="hero-video-container">
@@ -951,7 +998,7 @@
       </div>
     </section>
 
-    <section id="cardapio" style="background-color: var(--gray);">
+    <section id="cardapio" class="kiosk" style="background-color: var(--gray);">
       <div class="section-title">
         <h2>Nosso Cardápio</h2>
         <p>Todos os nossos pratos são preparados diariamente com ingredientes frescos e selecionados</p>
@@ -1192,7 +1239,7 @@
           </div>
         </div>
         <div class="gallery-item">
-          <img src="beb877idas/vinhos.jpg" alt="Vinhos">
+          <img src="bebidas/vinhos.jpg" alt="Vinhos">
           <div class="gallery-overlay">
             <h4>Vinhos Selecionados</h4>
           </div>
