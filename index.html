@@ -917,8 +917,8 @@
       }
 
       .hero-video {
-        height: 450px;
-        max-width: 100%;
+        max-width: 90vw; /* Aumenta a largura do vídeo */
+        height: 500px; /* Aumenta a altura para melhor visualização */
       }
 
       .testimonials {
@@ -966,8 +966,8 @@
       }
 
       .hero-video {
-        height: 350px;
-        max-width: 100%;
+        max-width: 95vw; /* Ocupa quase toda a largura da tela */
+        height: 400px; /* Altura ajustada para proporção ideal */
       }
 
       .modal-close {
@@ -1416,7 +1416,7 @@
   <!-- Modal para exibir imagem em tamanho real -->
   <div class="image-modal" id="imageModal">
     <div class="modal-content">
-      <span class="modal-close" id="modalClose">&times;</span>
+      <span class="modal-close" id="modalClose">×</span>
       <img id="modalImage" src="" alt="Imagem do Cardápio">
     </div>
   </div>
@@ -1507,26 +1507,31 @@
           }
         });
 
-        // Toque para dispositivos móveis
+        // Toque para dispositivos móveis (zoom)
+        let touchTimer = null;
         item.addEventListener('touchstart', (e) => {
           e.preventDefault(); // Evita comportamento padrão, como scroll durante o toque
-          menuItems.forEach(otherItem => {
-            if (otherItem !== item) {
-              otherItem.classList.remove('zoom-active');
-              const otherImg = otherItem.querySelector('img');
-              if (otherImg) {
-                otherImg.classList.remove('zoom-active-img');
+          touchTimer = setTimeout(() => {
+            // Long press não dispara modal, apenas zoom
+            menuItems.forEach(otherItem => {
+              if (otherItem !== item) {
+                otherItem.classList.remove('zoom-active');
+                const otherImg = otherItem.querySelector('img');
+                if (otherImg) {
+                  otherImg.classList.remove('zoom-active-img');
+                }
               }
+            });
+            item.classList.add('zoom-active');
+            const img = item.querySelector('img');
+            if (img) {
+              img.classList.add('zoom-active-img');
             }
-          });
-          item.classList.add('zoom-active');
-          const img = item.querySelector('img');
-          if (img) {
-            img.classList.add('zoom-active-img');
-          }
+          }, 100); // Pequeno atraso para diferenciar toque rápido de toque longo
         });
 
         item.addEventListener('touchend', () => {
+          clearTimeout(touchTimer);
           setTimeout(() => {
             item.classList.remove('zoom-active');
             const img = item.querySelector('img');
@@ -1536,11 +1541,23 @@
           }, 500); // Mantém o zoom por 500ms após o toque
         });
 
-        // Clique para abrir modal com imagem em tamanho real
+        // Clique/touch na imagem para abrir modal
         const img = item.querySelector('img');
         if (img) {
           img.addEventListener('click', (e) => {
             e.stopPropagation(); // Evita que o clique propague para o item
+            modalImage.src = img.src;
+            imageModal.classList.add('active');
+          });
+
+          // Suporte explícito para touch na imagem
+          img.addEventListener('touchstart', (e) => {
+            e.stopPropagation(); // Evita que o toque propague para o item
+            clearTimeout(touchTimer); // Cancela o zoom se for um toque na imagem
+          });
+
+          img.addEventListener('touchend', (e) => {
+            e.stopPropagation();
             modalImage.src = img.src;
             imageModal.classList.add('active');
           });
