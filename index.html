@@ -695,7 +695,7 @@
       font-size: 18px;
       margin-bottom: 20px;
       position: relative;
-      padding-bottom: 10px;
+      padding-bottom: 10 asa
     }
 
     .footer-col h4::after {
@@ -898,8 +898,12 @@
       }
 
       .menu-item-img {
-        flex: 0 0 120px;
-        height: 120px;
+        flex: 0 0 200px;
+        height: 200px;
+      }
+
+      .gallery-item {
+        height: 300px;
       }
 
       .mascote {
@@ -917,8 +921,8 @@
       }
 
       .hero-video {
-        max-width: 90vw; /* Aumenta a largura do vídeo */
-        height: 500px; /* Aumenta a altura para melhor visualização */
+        max-width: 90vw;
+        height: 500px;
       }
 
       .testimonials {
@@ -960,14 +964,18 @@
       }
 
       .menu-item-img {
-        flex: 0 0 150px;
-        height: 150px;
+        flex: 0 0 250px;
+        height: 250px;
         width: 100%;
       }
 
+      .gallery-item {
+        height: 350px;
+      }
+
       .hero-video {
-        max-width: 95vw; /* Ocupa quase toda a largura da tela */
-        height: 400px; /* Altura ajustada para proporção ideal */
+        max-width: 95vw;
+        height: 400px;
       }
 
       .modal-close {
@@ -1509,10 +1517,14 @@
 
         // Toque para dispositivos móveis (zoom)
         let touchTimer = null;
+        let touchStartY = 0;
+        let touchStartX = 0;
+
         item.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // Evita comportamento padrão, como scroll durante o toque
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
           touchTimer = setTimeout(() => {
-            // Long press não dispara modal, apenas zoom
+            // Long press para zoom
             menuItems.forEach(otherItem => {
               if (otherItem !== item) {
                 otherItem.classList.remove('zoom-active');
@@ -1527,7 +1539,18 @@
             if (img) {
               img.classList.add('zoom-active-img');
             }
-          }, 100); // Pequeno atraso para diferenciar toque rápido de toque longo
+          }, 300);
+        });
+
+        item.addEventListener('touchmove', (e) => {
+          // Detectar movimento de scroll e cancelar zoom
+          const touchEndX = e.touches[0].clientX;
+          const touchEndY = e.touches[0].clientY;
+          const deltaX = Math.abs(touchEndX - touchStartX);
+          const deltaY = Math.abs(touchEndY - touchStartY);
+          if (deltaX > 10 || deltaY > 10) {
+            clearTimeout(touchTimer);
+          }
         });
 
         item.addEventListener('touchend', () => {
@@ -1538,22 +1561,21 @@
             if (img) {
               img.classList.remove('zoom-active-img');
             }
-          }, 500); // Mantém o zoom por 500ms após o toque
+          }, 500);
         });
 
         // Clique/touch na imagem para abrir modal
         const img = item.querySelector('img');
         if (img) {
           img.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que o clique propague para o item
+            e.stopPropagation();
             modalImage.src = img.src;
             imageModal.classList.add('active');
           });
 
-          // Suporte explícito para touch na imagem
           img.addEventListener('touchstart', (e) => {
-            e.stopPropagation(); // Evita que o toque propague para o item
-            clearTimeout(touchTimer); // Cancela o zoom se for um toque na imagem
+            e.stopPropagation();
+            clearTimeout(touchTimer);
           });
 
           img.addEventListener('touchend', (e) => {
