@@ -37,12 +37,13 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script><!DOCTYPE html>
+        </script>```html
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Braz Grill Assados - O Melhor Assado do BrasiL, de Curitiba e Região </title>
+  <title>Braz Grill Assados - O Melhor Assado do Brasil, de Curitiba e Região</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
@@ -80,7 +81,6 @@
       box-shadow: 0 0 30px rgba(0,0,0,0.1);
     }
 
-    /* Header Moderno */
     header {
       background-color: var(--light);
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -134,7 +134,6 @@
       font-weight: 500;
     }
 
-    /* Menu Hamburguer para mobile */
     .menu-toggle {
       display: none;
       cursor: pointer;
@@ -150,7 +149,7 @@
       display: flex;
       gap: 25px;
     }
-    
+
     .nav-menu a {
       text-decoration: none;
       color: var(--dark);
@@ -160,7 +159,7 @@
       position: relative;
       padding: 5px 0;
     }
-    
+
     .nav-menu a:hover {
       color: var(--primary);
     }
@@ -180,7 +179,6 @@
       width: 100%;
     }
 
-    /* Hero Section */
     .hero {
       position: relative;
       height: 80vh;
@@ -236,7 +234,6 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    /* Wi-Fi Dialog */
     .wifi-dialog {
       display: none;
       position: absolute;
@@ -264,7 +261,6 @@
       color: var(--primary);
     }
 
-    /* Botões */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -316,7 +312,21 @@
       box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
 
-    /* Seções */
+    .btn-whatsapp {
+      background-color: #25D366;
+      color: var(--light);
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+      font-size: 14px;
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: #128C7E;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
     section {
       padding: 80px 30px;
       position: relative;
@@ -356,7 +366,6 @@
       margin: 0 auto;
     }
 
-    /* Cardápio */
     .menu-category {
       margin-bottom: 50px;
     }
@@ -431,9 +440,9 @@
       font-weight: 700;
       color: var(--primary);
       font-size: 18px;
+      margin-bottom: 10px;
     }
 
-    /* Acompanhamentos */
     .acompanhamentos-category {
       background-color: #fff9e6;
       padding: 30px;
@@ -441,7 +450,6 @@
       margin-top: 40px;
     }
 
-    /* Galeria (Bebidas) */
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -506,7 +514,6 @@
       font-size: 16px;
     }
 
-    /* Modal para imagem em tamanho real */
     .image-modal {
       display: none;
       position: fixed;
@@ -557,7 +564,6 @@
       transform: scale(1.2);
     }
 
-    /* Depoimentos */
     .testimonials {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -603,7 +609,6 @@
       color: var(--primary);
     }
 
-    /* Contato e Mapa */
     .contact-section {
       background-color: var(--gray);
       padding: 80px 0;
@@ -674,7 +679,6 @@
       border: none;
     }
 
-    /* Footer */
     footer {
       background-color: var(--dark);
       color: var(--light);
@@ -695,7 +699,7 @@
       font-size: 18px;
       margin-bottom: 20px;
       position: relative;
-      padding-bottom: 10 asa
+      padding-bottom: 10px;
     }
 
     .footer-col h4::after {
@@ -752,7 +756,6 @@
       opacity: 0.7;
     }
 
-    /* Botão WhatsApp Flutuante */
     .whatsapp-float {
       position: fixed;
       bottom: 30px;
@@ -781,7 +784,6 @@
       margin-right: 10px;
     }
 
-    /* Mascote Animado */
     .mascote {
       position: fixed;
       bottom: 120px;
@@ -809,7 +811,6 @@
       transform: scale(1.1);
     }
 
-    /* Responsividade */
     @media (max-width: 1200px) {
       .hero-content h1 {
         font-size: 42px;
@@ -1038,8 +1039,11 @@
         <nav class="nav-menu" id="navMenu">
           <a href="#home">Home</a>
           <a href="#cardapio">Cardápio</a>
-          <a href="#bebidas">Bebidas</a>
+          <a href="#bovinas">Carnes Bovinas</a>
+          <a href="#frangos">Frangos</a>
+          <a href="#suinas">Carnes Suínas</a>
           <a href="#acompanhamentos">Acompanhamentos</a>
+          <a href="#bebidas">Bebidas</a>
           <a href="#contato">Contato</a>
         </nav>
       </div>
@@ -1081,7 +1085,6 @@
         <p>Todos os nossos pratos são preparados diariamente com ingredientes frescos e selecionados</p>
       </div>
 
-      <!-- Carnes Bovinas -->
       <div class="menu-category" id="bovinas">
         <h3>Carnes Bovinas</h3>
         <p class="category-description">Costela, fraldinha e cupim feitos no ponto perfeito.</p>
@@ -1095,6 +1098,9 @@
               <h4>Costela de Boi Sem Osso</h4>
               <p>Uma costela suculenta, assada lentamente em papel celofane para reter todos os sabores. O resultado é uma carne tão macia que desmancha na boca.</p>
               <div class="menu-price">R$ 68,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Costela%20de%20Boi%20Sem%20Osso" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1106,6 +1112,9 @@
               <h4>Fraldinha</h4>
               <p>Corte nobre e saboroso, a fraldinha é assada em papel celofane até ficar perfeitamente macia e desfiável. Cada pedaço é uma explosão de suculência e aroma.</p>
               <div class="menu-price">R$ 78,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Fraldinha" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1115,14 +1124,16 @@
             </div>
             <div class="menu-item-content">
               <h4>Cupim</h4>
-              <p>O cupim,é assado no papel celofane até atingir uma textura incrivelmente macia e um sabor rico e marcante.</p>
+              <p>O cupim, é assado no papel celofane até atingir uma textura incrivelmente macia e um sabor rico e marcante.</p>
               <div class="menu-price">R$ 78,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Cupim" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Frangos -->
       <div class="menu-category" id="frangos">
         <h3>Frangos</h3>
         <p class="category-description">Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
@@ -1136,6 +1147,9 @@
               <h4>Frango com ou sem Recheio</h4>
               <p>Frango inteiro, recheado com uma farofa de milho artesanal ou servido simples. Assado até a pele ficar dourada e suculenta.</p>
               <div class="menu-price">R$ 45,00 a unidade</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Frango%20com%20ou%20sem%20Recheio" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1145,8 +1159,11 @@
             </div>
             <div class="menu-item-content">
               <h4>Frango Desossado</h4>
-              <p>Frango Dessossado e recheado com arroz colorido ou farofa de milho, perfeita para quem busca praticidade de não precisar fazer pratos sem abrir mão do sabor.</p>
+              <p>Frango Desossado e recheado com arroz colorido ou farofa de milho, perfeita para quem busca praticidade de não precisar fazer pratos sem abrir mão do sabor.</p>
               <div class="menu-price">R$ 55,00 a unidade</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Frango%20Desossado" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1158,6 +1175,9 @@
               <h4>Meio Frango</h4>
               <p>Metade de um frango assado, com a pele crocante e a carne suculenta, ideal para quem deseja uma refeição rápida e deliciosa.</p>
               <div class="menu-price">R$ 22,00 a unidade</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Meio%20Frango" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1169,6 +1189,9 @@
               <h4>Coxa com Sobrecoxa</h4>
               <p>Coxa com sobrecoxa assadas até ficarem douradas e suculentas.</p>
               <div class="menu-price">R$ 38,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Coxa%20com%20Sobrecoxa" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1180,12 +1203,14 @@
               <h4>Medalhão de Frango</h4>
               <p>Peito de frango envolto em fatias de bacon, assado até ficar com uma crosta caramelizada e o interior macio e saboroso.</p>
               <div class="menu-price">R$ 75,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Medalhão%20de%20Frango" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Carnes Suínas -->
       <div class="menu-category" id="suinas">
         <h3>Carnes Suínas</h3>
         <p class="category-description">Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
@@ -1199,6 +1224,9 @@
               <h4>Costelinha Pururuca</h4>
               <p>Costelinha de porco assada até a pele ficar estaladiça (pururuca), com a carne tão macia que se solta do osso.</p>
               <div class="menu-price">R$ 68,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Costelinha%20Pururuca" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1210,6 +1238,9 @@
               <h4>Copa Lombo</h4>
               <p>Corte suíno suculento e saboroso, assado lentamente para garantir maciez e um sabor inigualável.</p>
               <div class="menu-price">R$ 68,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Copa%20Lombo" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1221,6 +1252,9 @@
               <h4>Paleta Suína</h4>
               <p>Paleta de porco preparada no estilo pururuca, com a pele crocante e a carne desfiável, repleta de temperos especiais.</p>
               <div class="menu-price">R$ 48,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Paleta%20Suína" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1232,6 +1266,9 @@
               <h4>Joelho Eisbein</h4>
               <p>Joelho suíno assado até a pele ficar crocante e a carne macia, uma combinação perfeita de texturas e sabores.</p>
               <div class="menu-price">R$ 48,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Joelho%20Eisbein" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1243,6 +1280,9 @@
               <h4>Linguiça de Pernil e Lombo</h4>
               <p>Linguiça artesanal feita com cortes nobres de pernil e lombo, e o melhor de tudo, sem conservantes.</p>
               <div class="menu-price">R$ 38,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Linguiça%20de%20Pernil%20e%20Lombo" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1254,12 +1294,14 @@
               <h4>Medalhão Suíno</h4>
               <p>Copa lombo envolta em bacon, assada até ficar com uma crosta dourada e o interior suculento e cheio de sabor.</p>
               <div class="menu-price">R$ 75,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Medalhão%20Suíno" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Acompanhamentos -->
       <div class="menu-category acompanhamentos-category" id="acompanhamentos">
         <h3>Acompanhamentos Especiais</h3>
         <p class="category-description">Complementos perfeitos para realçar o sabor dos nossos assados.</p>
@@ -1273,6 +1315,9 @@
               <h4>Maionese Caseira</h4>
               <p>Nossa maionese artesanal é feita com leite fresco, batata e óleo de qualidade, resultando em um creme leve e saboroso que combina perfeitamente com todos os nossos assados.</p>
               <div class="menu-price">R$ 8,00 500gr</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Maionese%20Caseira" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
 
@@ -1284,6 +1329,23 @@
               <h4>Farofa de Paçoca de Carne</h4>
               <p>Farofa crocante preparada com toucinho de porco e carne seca, uma receita tradicional que traz um toque especial ao seu prato.</p>
               <div class="menu-price">R$ 10,00 250gr</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Farofa%20de%20Paçoca%20de%20Carne" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div class="menu-item-img">
+              <img src="cardapio/linguica-frescal.jpg" alt="Linguiça Artesanal Frescal de Lombo e Pernil">
+            </div>
+            <div class="menu-item-content">
+              <h4>Linguiça Artesanal Frescal de Lombo e Pernil</h4>
+              <p>Linguiça frescal artesanal, preparada com cortes selecionados de lombo e pernil, temperada com ervas naturais, perfeita como acompanhamento para seus assados.</p>
+              <div class="menu-price">R$ 40,00 kg</div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Linguiça%20Artesanal%20Frescal%20de%20Lombo%20e%20Pernil" class="btn btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
+              </a>
             </div>
           </div>
         </div>
@@ -1298,9 +1360,9 @@
 
       <div class="gallery">
         <div class="gallery-item">
-          <img src="bebidas/Agua.jpg" alt="Agua">
+          <img src="bebidas/Agua.jpg" alt="Água">
           <div class="gallery-overlay">
-            <h4>Agua</h4>
+            <h4>Água</h4>
           </div>
         </div>
         <div class="gallery-item">
@@ -1373,7 +1435,7 @@
         </div>
 
         <div class="map-container">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3602.238540189611!2d-49.23466892433548!3d-25.45926863333083!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dce472f8f33f0f%3A0x6e7e3e3e3e3e3e3e!2sRua%20Rep%C3%BAblica%20Isl%C3%A2mica%20do%20Ir%C3%A3%2C%20330%20-%20Jardim%20das%20Am%C3%A9ricas%2C%20Curitiba%20-%20PR%2C%2081530-180!5e0!3m2!1spt-BR!2sbr!4v1620000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3602.238540189611!2d-49.23466892433548!3d-25.45926833333083!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dce472f8f33f0f%3A0x6e7e3e3e3e3e3e3e!2sRua%20Rep%C3%BAblica%20Isl%C3%A2mica%20do%20Ir%C3%A3%2C%20330%20-%20Jardim%20das%20Am%C3%A9ricas%2C%20Curitiba%20-%20PR%2C%2081530-180!5e0!3m2!1spt-BR!2sbr!4v1620000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
         </div>
       </div>
     </section>
@@ -1390,7 +1452,7 @@
           <h4>Horário de Funcionamento</h4>
           <p><strong>Sábado:</strong> 10h às 14h</p>
           <p><strong>Domingo:</strong> 10h às 16h</p>
-          <p>Assamos todos os sabados e domingos, independente de feriados.</p>
+          <p>Assamos todos os sábados e domingos, independente de feriados.</p>
         </div>
 
         <div class="footer-col">
@@ -1398,8 +1460,11 @@
           <ul class="footer-links">
             <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
             <li><a href="#cardapio"><i class="fas fa-chevron-right"></i> Cardápio</a></li>
-            <li><a href="#bebidas"><i class="fas fa-chevron-right"></i> Bebidas</a></li>
+            <li><a href="#bovinas"><i class="fas fa-chevron-right"></i> Carnes Bovinas</a></li>
+            <li><a href="#frangos"><i class="fas fa-chevron-right"></i> Frangos</a></li>
+            <li><a href="#suinas"><i class="fas fa-chevron-right"></i> Carnes Suínas</a></li>
             <li><a href="#acompanhamentos"><i class="fas fa-chevron-right"></i> Acompanhamentos</a></li>
+            <li><a href="#bebidas"><i class="fas fa-chevron-right"></i> Bebidas</a></li>
           </ul>
         </div>
       </div>
@@ -1421,7 +1486,6 @@
     <span>Pedir pelo WhatsApp</span>
   </a>
 
-  <!-- Modal para exibir imagem em tamanho real -->
   <div class="image-modal" id="imageModal">
     <div class="modal-content">
       <span class="modal-close" id="modalClose">×</span>
@@ -1430,7 +1494,6 @@
   </div>
 
   <script>
-    // Menu Mobile
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
 
@@ -1441,7 +1504,6 @@
         : '<i class="fas fa-bars"></i>';
     });
 
-    // Fechar menu ao clicar em um link
     const navLinks = document.querySelectorAll('.nav-menu a');
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
@@ -1450,7 +1512,6 @@
       });
     });
 
-    // Scroll suave
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -1461,7 +1522,6 @@
       });
     });
 
-    // Animação ao rolar
     const animateOnScroll = () => {
       const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
       
@@ -1476,12 +1536,6 @@
       });
     };
 
-    // Modal para imagem em tamanho real
-    const imageModal = document.getElementById('imageModal');
-    const modalImage = document.getElementById('modalImage');
-    const modalClose = document.getElementById('modalClose');
-
-    // Inicializar elementos com opacidade 0 para animação e configurar eventos
     window.addEventListener('DOMContentLoaded', () => {
       const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
       elements.forEach(element => {
@@ -1490,15 +1544,12 @@
         element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       });
       
-      // Forçar redesenho
       void elements[0].offsetHeight;
       
       animateOnScroll();
 
-      // Adicionar suporte a eventos de toque, hover e clique
       const menuItems = document.querySelectorAll('.menu-item, .gallery-item');
       menuItems.forEach(item => {
-        // Hover para desktop
         item.addEventListener('mouseenter', () => {
           item.classList.add('zoom-active');
           const img = item.querySelector('img');
@@ -1515,7 +1566,6 @@
           }
         });
 
-        // Toque para dispositivos móveis (zoom)
         let touchTimer = null;
         let touchStartY = 0;
         let touchStartX = 0;
@@ -1524,7 +1574,6 @@
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
           touchTimer = setTimeout(() => {
-            // Long press para zoom
             menuItems.forEach(otherItem => {
               if (otherItem !== item) {
                 otherItem.classList.remove('zoom-active');
@@ -1543,7 +1592,6 @@
         });
 
         item.addEventListener('touchmove', (e) => {
-          // Detectar movimento de scroll e cancelar zoom
           const touchEndX = e.touches[0].clientX;
           const touchEndY = e.touches[0].clientY;
           const deltaX = Math.abs(touchEndX - touchStartX);
@@ -1564,7 +1612,6 @@
           }, 500);
         });
 
-        // Clique/touch na imagem para abrir modal
         const img = item.querySelector('img');
         if (img) {
           img.addEventListener('click', (e) => {
@@ -1586,12 +1633,14 @@
         }
       });
 
-      // Fechar modal ao clicar no botão de fechar
+      const imageModal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      const modalClose = document.getElementById('modalClose');
+
       modalClose.addEventListener('click', () => {
         imageModal.classList.remove('active');
       });
 
-      // Fechar modal ao clicar fora da imagem
       imageModal.addEventListener('click', (e) => {
         if (e.target === imageModal) {
           imageModal.classList.remove('active');
@@ -1603,3 +1652,4 @@
   </script>
 </body>
 </html>
+```
