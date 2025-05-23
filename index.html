@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -285,6 +324,40 @@
       background-color: #128C7E;
       transform: translateY(-3px);
       box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .quantity-control button {
+      background-color: var(--primary);
+      color: var(--light);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .quantity-control button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .quantity-control input {
+      width: 60px;
+      text-align: center;
+      border: 1px solid var(--primary);
+      border-radius: 5px;
+      padding: 5px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
     }
 
     section {
@@ -1058,7 +1131,13 @@
               <h4>Costela de Boi Sem Osso</h4>
               <p>Uma costela suculenta, assada lentamente em papel celofane para reter todos os sabores. O resultado é uma carne tão macia que desmancha na boca.</p>
               <div class="menu-price">R$ 68,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Costela%20de%20Boi%20Sem%20Osso" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('costela', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-costela" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('costela', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Costela%20de%20Boi%20Sem%20Osso" class="btn btn-whatsapp" id="whatsapp-costela" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1072,7 +1151,13 @@
               <h4>Fraldinha</h4>
               <p>Corte nobre e saboroso, a fraldinha é assada em papel celofane até ficar perfeitamente macia e desfiável. Cada pedaço é uma explosão de suculência e aroma.</p>
               <div class="menu-price">R$ 78,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Fraldinha" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('fraldinha', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-fraldinha" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('fraldinha', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Fraldinha" class="btn btn-whatsapp" id="whatsapp-fraldinha" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1086,7 +1171,13 @@
               <h4>Cupim</h4>
               <p>O cupim, é assado no papel celofane até atingir uma textura incrivelmente macia e um sabor rico e marcante.</p>
               <div class="menu-price">R$ 78,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Cupim" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('cupim', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-cupim" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('cupim', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Cupim" class="btn btn-whatsapp" id="whatsapp-cupim" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1107,7 +1198,13 @@
               <h4>Frango com ou sem Recheio</h4>
               <p>Frango inteiro, recheado com uma farofa de milho artesanal ou servido simples. Assado até a pele ficar dourada e suculenta.</p>
               <div class="menu-price">R$ 45,00 a unidade</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Frango%20com%20ou%20sem%20Recheio" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('frango-recheado', -1, 1, 10)">-</button>
+                <input type="number" id="quantity-frango-recheado" value="1" min="1" max="10" step="1" readonly>
+                <button onclick="updateQuantity('frango-recheado', 1, 1, 10)">+</button>
+                <span>unidade(s)</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%201%20unidade%20de%20Frango%20com%20ou%20sem%20Recheio" class="btn btn-whatsapp" id="whatsapp-frango-recheado" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1121,7 +1218,13 @@
               <h4>Frango Desossado</h4>
               <p>Frango Desossado e recheado com arroz colorido ou farofa de milho, perfeita para quem busca praticidade de não precisar fazer pratos sem abrir mão do sabor.</p>
               <div class="menu-price">R$ 55,00 a unidade</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Frango%20Desossado" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('frango-desossado', -1, 1, 10)">-</button>
+                <input type="number" id="quantity-frango-desossado" value="1" min="1" max="10" step="1" readonly>
+                <button onclick="updateQuantity('frango-desossado', 1, 1, 10)">+</button>
+                <span>unidade(s)</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%201%20unidade%20de%20Frango%20Desossado" class="btn btn-whatsapp" id="whatsapp-frango-desossado" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1135,7 +1238,13 @@
               <h4>Meio Frango</h4>
               <p>Metade de um frango assado, com a pele crocante e a carne suculenta, ideal para quem deseja uma refeição rápida e deliciosa.</p>
               <div class="menu-price">R$ 22,00 a unidade</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Meio%20Frango" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('meio-frango', -1, 1, 10)">-</button>
+                <input type="number" id="quantity-meio-frango" value="1" min="1" max="10" step="1" readonly>
+                <button onclick="updateQuantity('meio-frango', 1, 1, 10)">+</button>
+                <span>unidade(s)</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%201%20unidade%20de%20Meio%20Frango" class="btn btn-whatsapp" id="whatsapp-meio-frango" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1149,7 +1258,13 @@
               <h4>Coxa com Sobrecoxa</h4>
               <p>Coxa com sobrecoxa assadas até ficarem douradas e suculentas.</p>
               <div class="menu-price">R$ 38,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Coxa%20com%20Sobrecoxa" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('coxa-sobrecoxa', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-coxa-sobrecoxa" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('coxa-sobrecoxa', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Coxa%20com%20Sobrecoxa" class="btn btn-whatsapp" id="whatsapp-coxa-sobrecoxa" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1163,7 +1278,13 @@
               <h4>Medalhão de Frango</h4>
               <p>Peito de frango envolto em fatias de bacon, assado até ficar com uma crosta caramelizada e o interior macio e saboroso.</p>
               <div class="menu-price">R$ 75,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Medalhão%20de%20Frango" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('medalhao-frango', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-medalhao-frango" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('medalhao-frango', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Medalhão%20de%20Frango" class="btn btn-whatsapp" id="whatsapp-medalhao-frango" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1184,7 +1305,13 @@
               <h4>Costelinha Pururuca</h4>
               <p>Costelinha de porco assada até a pele ficar estaladiça (pururuca), com a carne tão macia que se solta do osso.</p>
               <div class="menu-price">R$ 68,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Costelinha%20Pururuca" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('costelinha', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-costelinha" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('costelinha', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Costelinha%20Pururuca" class="btn btn-whatsapp" id="whatsapp-costelinha" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1198,7 +1325,13 @@
               <h4>Copa Lombo</h4>
               <p>Corte suíno suculento e saboroso, assado lentamente para garantir maciez e um sabor inigualável.</p>
               <div class="menu-price">R$ 68,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Copa%20Lombo" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('copa-lombo', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-copa-lombo" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('copa-lombo', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Copa%20Lombo" class="btn btn-whatsapp" id="whatsapp-copa-lombo" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1212,7 +1345,13 @@
               <h4>Paleta Suína</h4>
               <p>Paleta de porco preparada no estilo pururuca, com a pele crocante e a carne desfiável, repleta de temperos especiais.</p>
               <div class="menu-price">R$ 49,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Paleta%20Suína" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('paleta', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-paleta" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('paleta', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Paleta%20Suína" class="btn btn-whatsapp" id="whatsapp-paleta" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1226,7 +1365,13 @@
               <h4>Joelho Eisbein</h4>
               <p>Joelho suíno assado até a pele ficar crocante e a carne macia, uma combinação perfeita de texturas e sabores.</p>
               <div class="menu-price">R$ 49,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Joelho%20Eisbein" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('joelho', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-joelho" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('joelho', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Joelho%20Eisbein" class="btn btn-whatsapp" id="whatsapp-joelho" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1240,7 +1385,13 @@
               <h4>Linguiça de Pernil e Lombo</h4>
               <p>Linguiça artesanal feita com cortes nobres de pernil e lombo, e o melhor de tudo, sem conservantes.</p>
               <div class="menu-price">R$ 38,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Linguiça%20de%20Pernil%20e%20Lombo" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('linguica', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-linguica" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('linguica', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Linguiça%20de%20Pernil%20e%20Lombo" class="btn btn-whatsapp" id="whatsapp-linguica" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1254,7 +1405,13 @@
               <h4>Medalhão Suíno</h4>
               <p>Copa lombo envolta em bacon, assada até ficar com uma crosta dourada e o interior suculento e cheio de sabor.</p>
               <div class="menu-price">R$ 75,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20um%20Medalhão%20Suíno" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('medalhao-suino', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-medalhao-suino" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('medalhao-suino', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Medalhão%20Suíno" class="btn btn-whatsapp" id="whatsapp-medalhao-suino" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1274,8 +1431,14 @@
             <div class="menu-item-content">
               <h4>Maionese Caseira</h4>
               <p>Nossa maionese artesanal é feita com leite fresco, batata e óleo de qualidade, resultando em um creme leve e saboroso que combina perfeitamente com todos os nossos assados.</p>
-              <div class="menu-price">R$ 8,00 500gr</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Maionese%20Caseira" class="btn btn-whatsapp" target="_blank">
+              <div class="menu-price">R$ 8,00 unidade</div>
+              <div class="quantity-control">
+                <button onclick="updateQuantity('maionese', -1, 1, 10)">-</button>
+                <input type="number" id="quantity-maionese" value="1" min="1" max="10" step="1" readonly>
+                <button onclick="updateQuantity('maionese', 1, 1, 10)">+</button>
+                <span>unidade(s)</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%201%20unidade%20de%20Maionese%20Caseira" class="btn btn-whatsapp" id="whatsapp-maionese" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1288,8 +1451,14 @@
             <div class="menu-item-content">
               <h4>Farofa de Paçoca de Carne</h4>
               <p>Farofa crocante preparada com toucinho de porco e carne seca, uma receita tradicional que traz um toque especial ao seu prato.</p>
-              <div class="menu-price">R$ 10,00 250gr</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Farofa%20de%20Paçoca%20de%20Carne" class="btn btn-whatsapp" target="_blank">
+              <div class="menu-price">R$ 10,00 unidade</div>
+              <div class="quantity-control">
+                <button onclick="updateQuantity('farofa', -1, 1, 10)">-</button>
+                <input type="number" id="quantity-farofa" value="1" min="1" max="10" step="1" readonly>
+                <button onclick="updateQuantity('farofa', 1, 1, 10)">+</button>
+                <span>unidade(s)</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%201%20unidade%20de%20Farofa%20de%20Paçoca%20de%20Carne" class="btn btn-whatsapp" id="whatsapp-farofa" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1303,7 +1472,13 @@
               <h4>Linguiça Artesanal Frescal de Lombo e Pernil</h4>
               <p>Linguiça frescal artesanal, preparada com cortes selecionados de lombo e pernil, temperada com ervas naturais, perfeita como acompanhamento para seus assado ou churrasco.</p>
               <div class="menu-price">R$ 20,00 kg</div>
-              <a href="https://wa.me/5541988738707?text=Quero%20reservar%20uma%20Linguiça%20Artesanal%20Frescal%20de%20Lombo%20e%20Pernil" class="btn btn-whatsapp" target="_blank">
+              <div class="quantity-control">
+                <button onclick="updateQuantity('linguica-frescal', -0.1, 0.5, 5)">-</button>
+                <input type="number" id="quantity-linguica-frescal" value="0.5" min="0.5" max="5" step="0.1" readonly>
+                <button onclick="updateQuantity('linguica-frescal', 0.1, 0.5, 5)">+</button>
+                <span>kg</span>
+              </div>
+              <a href="https://wa.me/5541988738707?text=Quero%20reservar%200.5kg%20de%20Linguiça%20Artesanal%20Frescal%20de%20Lombo%20e%20Pernil" class="btn btn-whatsapp" id="whatsapp-linguica-frescal" target="_blank">
                 <i class="fab fa-whatsapp"></i> Reservar pelo WhatsApp
               </a>
             </div>
@@ -1495,6 +1670,18 @@
         }
       });
     };
+
+    function updateQuantity(itemId, change, min, max) {
+      const input = document.getElementById(`quantity-${itemId}`);
+      let value = parseFloat(input.value);
+      value = Math.max(min, Math.min(max, value + change));
+      input.value = value.toFixed(change < 1 ? 2 : 0);
+      
+      const whatsappLink = document.getElementById(`whatsapp-${itemId}`);
+      const itemName = whatsappLink.href.match(/text=Quero%20reservar%20[\d.]+(kg|unidade\(s\))%20de%20(.+)/)[2];
+      const unit = change < 1 ? 'kg' : 'unidade(s)';
+      whatsappLink.href = `https://wa.me/5541988738707?text=Quero%20reservar%20${input.value}${unit}%20de%20${itemName}`;
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
