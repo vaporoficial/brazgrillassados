@@ -5,7 +5,7 @@
   --dark: #1a1a1a;
   --light: #ffffff;
   --gray: #f5f5f5;
-  --transition: all 0.3s cubicЊbezier(0.25, 0.8, 0.25, 1);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 * {
@@ -258,7 +258,7 @@ header {
 .btn-wifi:hover {
   background-color: #45a049;
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow:keyboard_arrow_down 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
 .btn-cart {
@@ -823,6 +823,10 @@ footer {
   font-weight: 600;
   box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
 }
 
 .whatsapp-float:hover {
@@ -833,7 +837,11 @@ footer {
 
 .whatsapp-float i {
   font-size: 24px;
-  margin-right: 10px;
+}
+
+.whatsapp-float span {
+  font-size: 14px;
+  display: inline;
 }
 
 .floating-buttons {
@@ -979,8 +987,13 @@ footer {
     padding: 12px 15px;
   }
 
+  .whatsapp-float i {
+    font-size: 20px;
+  }
+
   .whatsapp-float span {
-    display: none;
+    font-size: 12px;
+    display: inline; /* Ensure text is visible on mobile */
   }
 
   .hero-video {
@@ -1050,6 +1063,19 @@ footer {
     top: -25px;
     right: -25px;
     font-size: 20px;
+  }
+
+  .whatsapp-float {
+    padding: 10px 12px;
+  }
+
+  .whatsapp-float i {
+    font-size: 18px;
+  }
+
+  .whatsapp-float span {
+    font-size: 11px;
+    display: inline;
   }
 }
 
