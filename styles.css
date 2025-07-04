@@ -258,7 +258,7 @@ header {
 .btn-wifi:hover {
   background-color: #45a049;
   transform: translateY(-3px);
-  box-shadow:keyboard_arrow_down 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
 .btn-cart {
@@ -382,13 +382,13 @@ section {
 }
 
 .menu-item:hover {
-  transform: scale(1.5);
+  transform: scale(1.05);
   box-shadow: 0 15px 30px rgba(0,0,0,0.25);
   z-index: 10;
 }
 
 .menu-item.zoom-active {
-  transform: scale(1.5);
+  transform: scale(1.05);
   box-shadow: 0 15px 30px rgba(0,0,0,0.25);
   z-index: 10;
 }
@@ -462,13 +462,13 @@ section {
 }
 
 .gallery-item:hover {
-  transform: scale(1.5);
+  transform: scale(1.05);
   box-shadow: 0 15px 30px rgba(0,0,0,0.2);
   z-index: 10;
 }
 
 .gallery-item.zoom-active {
-  transform: scale(1.5);
+  transform: scale(1.05);
   box-shadow: 0 15px 30px rgba(0,0,0,0.2);
   z-index: 10;
 }
@@ -587,6 +587,33 @@ section {
   position: relative;
 }
 
+.cart-modal .modal-content h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.cart-modal .modal-content .cart-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 20px;
+  text-align: right;
+}
+
+.cart-modal .modal-content .cart-message {
+  font-size: 16px;
+  color: var(--dark);
+  margin-bottom: 20px;
+  text-align: center;
+  display: none;
+}
+
+.cart-modal .modal-content .cart-message.success {
+  color: #4CAF50;
+}
+
 #cartItems {
   margin-bottom: 20px;
 }
@@ -605,6 +632,14 @@ section {
 
 .cart-item-name {
   flex: 1;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.cart-item-price {
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 20px;
 }
 
 .cart-item-quantity {
@@ -973,6 +1008,18 @@ footer {
     height: 200px;
   }
 
+  .menu-item:hover,
+  .menu-item.zoom-active {
+    transform: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+
+  .gallery-item:hover,
+  .gallery-item.zoom-active {
+    transform: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
   .gallery-item {
     height: 300px;
   }
@@ -993,7 +1040,7 @@ footer {
 
   .whatsapp-float span {
     font-size: 12px;
-    display: inline; /* Ensure text is visible on mobile */
+    display: inline;
   }
 
   .hero-video {

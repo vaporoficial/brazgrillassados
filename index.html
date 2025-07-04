@@ -1,37 +1,72 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Braz Grill Assados - O Melhor Assado do Brasil, de Curitiba e Região</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Braz Grill Assados</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="main-content">
     <header>
       <div class="header-container">
         <div class="logo">
-          <img src="logo.png" alt="Braz Grill Assados" />
+          <img src="logo.png" alt="Braz Grill Assados">
           <div class="logo-text">
             <h1>BRAZ GRILL ASSADOS</h1>
             <span>O melhor assado de Curitiba e Região!!</span>
           </div>
         </div>
-
-        <div class="menu-toggle" id="menuToggle">
+        <div class="menu-toggle">
           <i class="fas fa-bars"></i>
         </div>
-
-        <nav class="nav-menu" id="navMenu">
+        <nav class="nav-menu">
           <a href="#home">Home</a>
           <a href="#cardapio">Cardápio</a>
-          <a href="#bovinas">Carnes Bovinas</a>
+          <a href="#carnes-bovinas">Carnes Bovinas</a>
           <a href="#frangos">Frangos</a>
-          <a href="#suinas">Carnes Suínas</a>
+          <a href="#carnes-suinas">Carnes Suínas</a>
           <a href="#acompanhamentos">Acompanhamentos</a>
           <a href="#bebidas">Bebidas</a>
           <a href="#contato">Contato</a>
@@ -44,16 +79,10 @@
         <div class="hero-content">
           <h1>O verdadeiro sabor do Assado Brasileiro</h1>
           <p>Carnes selecionadas, temperos especiais e um toque caseiro que faz toda a diferença. Há mais de 20 anos levando qualidade à sua mesa.</p>
-          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <a href="#cardapio" class="btn btn-primary">
-              <i class="fas fa-utensils"></i> Ver Cardápio
-            </a>
-            <a href="https://wa.me/5541988738707" class="btn btn-secondary" target="_blank">
-              <i class="fab fa-whatsapp"></i> Fazer Pedido
-            </a>
-            <a href="WIFI:S:brazgrillassados;T:WPA;P:melhor assado;;" class="btn btn-wifi">
-              <i class="fas fa-wifi"></i> Conectar ao Wi-Fi
-            </a>
+          <div>
+            <a href="#cardapio" class="btn btn-primary">Ver Cardápio</a>
+            <a href="#contato" class="btn btn-secondary">Fazer Pedido</a>
+            <a href="#" class="btn btn-wifi">Conectar ao Wi-Fi</a>
             <div class="wifi-dialog">
               <p><strong>Nome da Rede:</strong> brazgrillassados</p>
               <p><strong>Senha:</strong> melhorassado</p>
@@ -61,7 +90,7 @@
           </div>
         </div>
         <div class="hero-video-container">
-          <video class="hero-video" controls muted>
+          <video class="hero-video" autoplay muted loop>
             <source src="videos/churrasco.mp4" type="video/mp4">
             Seu navegador não suporta o elemento de vídeo.
           </video>
@@ -69,32 +98,31 @@
       </div>
     </section>
 
-    <section id="cardapio" style="background-color: var(--gray);">
+    <section id="cardapio">
       <div class="section-title">
         <h2>Nosso Cardápio</h2>
         <p>Todos os nossos pratos são preparados diariamente com ingredientes frescos e selecionados</p>
       </div>
 
-      <div class="menu-category" id="bovinas">
+      <div class="menu-category" id="carnes-bovinas">
         <h3>Carnes Bovinas</h3>
-        <p class="category-description">Costela, fraldinha e cupim feitos no ponto perfeito.</p>
-        
+        <p>Costela, fraldinha e cupim feitos no ponto perfeito.</p>
         <div class="menu-items">
           <div class="menu-item">
             <div class="menu-item-img">
-              <img src="cardapio/costela.jpg" alt="Costela de Boi">
+              <img src="cardapio/costela.jpg" alt="Costela de Boi Sem Osso">
             </div>
             <div class="menu-item-content">
               <h4>Costela de Boi Sem Osso</h4>
               <p>Uma costela suculenta, assada lentamente em papel celofane para reter todos os sabores. O resultado é uma carne tão macia que desmancha na boca.</p>
               <div class="menu-price">R$ 68,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('costela', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-costela" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('costela', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Costela de Boi Sem Osso" data-price="68.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -107,12 +135,12 @@
               <p>Corte nobre e saboroso, a fraldinha é assada em papel celofane até ficar perfeitamente macia e desfiável. Cada pedaço é uma explosão de suculência e aroma.</p>
               <div class="menu-price">R$ 78,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('fraldinha', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-fraldinha" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('fraldinha', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Fraldinha" data-price="78.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -125,12 +153,12 @@
               <p>O cupim, é assado no papel celofane até atingir uma textura incrivelmente macia e um sabor rico e marcante.</p>
               <div class="menu-price">R$ 78,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('cupim', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-cupim" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('cupim', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Cupim" data-price="78.00">Adicionar ao Carrinho</button>
             </div>
           </div>
         </div>
@@ -138,27 +166,27 @@
 
       <div class="menu-category" id="frangos">
         <h3>Frangos</h3>
-        <p class="category-description">Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
-        
+        <p>Frango recheado, desossado ou coxa e sobrecoxa temperados com carinho.</p>
         <div class="menu-items">
           <div class="menu-item">
             <div class="menu-item-img">
-              <img src="cardapio/frango-recheado.jpg" alt="Frango Recheado">
+              <img src="cardapio/frango-recheado.jpg" alt="Frango com ou sem Recheio">
             </div>
             <div class="menu-item-content">
               <h4>Frango com ou sem Recheio</h4>
               <p>Frango inteiro, recheado com uma farofa de milho artesanal ou servido simples. Assado até a pele ficar dourada e suculenta.</p>
               <div class="menu-price">R$ 45,00 a unidade</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('frango-recheado', -1, 1, 10)">-</button>
-                <input type="number" id="quantity-frango-recheado" value="1" min="1" max="10" step="1" readonly>
-                <button onclick="updateQuantity('frango-recheado', 1, 1, 10)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>unidade(s)</span>
               </div>
               <div class="option-buttons">
-                <button class="btn btn-primary add-to-cart" data-option="com farofa">Com Farofa</button>
-                <button class="btn btn-primary add-to-cart" data-option="sem farofa">Sem Farofa</button>
+                <button class="btn btn-primary option" data-option="Com Farofa">Com Farofa</button>
+                <button class="btn btn-primary option" data-option="Sem Farofa">Sem Farofa</button>
               </div>
+              <button class="btn btn-cart" data-name="Frango com ou sem Recheio" data-price="45.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -171,15 +199,16 @@
               <p>Frango Desossado e recheado com arroz colorido ou farofa de milho, perfeita para quem busca praticidade de não precisar fazer pratos sem abrir mão do sabor.</p>
               <div class="menu-price">R$ 55,00 a unidade</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('frango-desossado', -1, 1, 10)">-</button>
-                <input type="number" id="quantity-frango-desossado" value="1" min="1" max="10" step="1" readonly>
-                <button onclick="updateQuantity('frango-desossado', 1, 1, 10)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>unidade(s)</span>
               </div>
               <div class="option-buttons">
-                <button class="btn btn-primary add-to-cart" data-option="com farofa">Com Farofa</button>
-                <button class="btn btn-primary add-to-cart" data-option="com arroz colorido">Com Arroz Colorido</button>
+                <button class="btn btn-primary option" data-option="Com Farofa">Com Farofa</button>
+                <button class="btn btn-primary option" data-option="Com Arroz Colorido">Com Arroz Colorido</button>
               </div>
+              <button class="btn btn-cart" data-name="Frango Desossado" data-price="55.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -192,12 +221,12 @@
               <p>Metade de um frango assado, com a pele crocante e a carne suculenta, ideal para quem deseja uma refeição rápida e deliciosa.</p>
               <div class="menu-price">R$ 22,00 a unidade</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('meio-frango', -1, 1, 10)">-</button>
-                <input type="number" id="quantity-meio-frango" value="1" min="1" max="10" step="1" readonly>
-                <button onclick="updateQuantity('meio-frango', 1, 1, 10)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>unidade(s)</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Meio Frango" data-price="22.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -210,12 +239,12 @@
               <p>Coxa com sobrecoxa assadas até ficarem douradas e suculentas.</p>
               <div class="menu-price">R$ 38,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('coxa-sobrecoxa', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-coxa-sobrecoxa" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('coxa-sobrecoxa', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Coxa com Sobrecoxa" data-price="38.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -228,21 +257,20 @@
               <p>Peito de frango envolto em fatias de bacon, assado até ficar com uma crosta caramelizada e o interior macio e saboroso.</p>
               <div class="menu-price">R$ 75,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('medalhao-frango', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-medalhao-frango" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('medalhao-frango', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Medalhão de Frango" data-price="75.00">Adicionar ao Carrinho</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="menu-category" id="suinas">
+      <div class="menu-category" id="carnes-suinas">
         <h3>Carnes Suínas</h3>
-        <p class="category-description">Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
-        
+        <p>Costelinha, copa lombo e joelho Eisbein com pururuca crocante.</p>
         <div class="menu-items">
           <div class="menu-item">
             <div class="menu-item-img">
@@ -253,12 +281,12 @@
               <p>Costelinha de porco assada até a pele ficar estaladiça (pururuca), com a carne tão macia que se solta do osso.</p>
               <div class="menu-price">R$ 68,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('costelinha', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-costelinha" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('costelinha', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Costelinha Pururuca" data-price="68.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -271,12 +299,12 @@
               <p>Corte suíno suculento e saboroso, assado lentamente para garantir maciez e um sabor inigualável.</p>
               <div class="menu-price">R$ 68,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('copa-lombo', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-copa-lombo" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('copa-lombo', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Copa Lombo" data-price="68.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -289,12 +317,12 @@
               <p>Paleta de porco preparada no estilo pururuca, com a pele crocante e a carne desfiável, repleta de temperos especiais.</p>
               <div class="menu-price">R$ 49,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('paleta', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-paleta" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('paleta', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Paleta Suína" data-price="49.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -307,12 +335,12 @@
               <p>Joelho suíno assado até a pele ficar crocante e a carne macia, uma combinação perfeita de texturas e sabores.</p>
               <div class="menu-price">R$ 49,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('joelho', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-joelho" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('joelho', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Joelho Eisbein" data-price="49.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -325,12 +353,12 @@
               <p>Linguiça artesanal feita com cortes nobres de pernil e lombo, e o melhor de tudo, sem conservantes.</p>
               <div class="menu-price">R$ 38,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('linguiça', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-linguiça" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('linguiça', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Linguiça de Pernil e Lombo" data-price="38.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -343,12 +371,12 @@
               <p>Copa lombo envolta em bacon, assada até ficar com uma crosta dourada e o interior suculento e cheio de sabor.</p>
               <div class="menu-price">R$ 75,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('medalhao-suino', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-medalhao-suino" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('medalhao-suino', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Medalhão Suíno" data-price="75.00">Adicionar ao Carrinho</button>
             </div>
           </div>
         </div>
@@ -356,8 +384,7 @@
 
       <div class="menu-category acompanhamentos-category" id="acompanhamentos">
         <h3>Acompanhamentos Especiais</h3>
-        <p class="category-description">Complementos perfeitos para realçar o sabor dos nossos assados.</p>
-        
+        <p>Complementos perfeitos para realçar o sabor dos nossos assados.</p>
         <div class="menu-items">
           <div class="menu-item">
             <div class="menu-item-img">
@@ -368,12 +395,12 @@
               <p>Nossa maionese artesanal é feita com leite fresco, batata e óleo de qualidade, resultando em um creme leve e saboroso que combina perfeitamente com todos os nossos assados.</p>
               <div class="menu-price">R$ 8,00 unidade</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('maionese', -1, 1, 10)">-</button>
-                <input type="number" id="quantity-maionese" value="1" min="1" max="10" step="1" readonly>
-                <button onclick="updateQuantity('maionese', 1, 1, 10)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>unidade(s)</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Maionese Caseira" data-price="8.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
@@ -386,30 +413,30 @@
               <p>Farofa crocante preparada com toucinho de porco e carne seca, uma receita tradicional que traz um toque especial ao seu prato.</p>
               <div class="menu-price">R$ 10,00 unidade</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('farofa', -1, 1, 10)">-</button>
-                <input type="number" id="quantity-farofa" value="1" min="1" max="10" step="1" readonly>
-                <button onclick="updateQuantity('farofa', 1, 1, 10)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>unidade(s)</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Farofa de Paçoca de Carne" data-price="10.00">Adicionar ao Carrinho</button>
             </div>
           </div>
 
           <div class="menu-item">
             <div class="menu-item-img">
-              <img src="cardapio/linguiça-frescal.jpg" alt="Linguiça Artesanal Frescal de Lombo e Pernil">
+              <img src="cardapio/linguiça-frescal.jpg" alt="Linguiça Artesanal Frescal">
             </div>
             <div class="menu-item-content">
               <h4>Linguiça Artesanal Frescal de Lombo e Pernil</h4>
               <p>Linguiça frescal artesanal, preparada com cortes selecionados de lombo e pernil, temperada com ervas naturais, perfeita como acompanhamento para seus assado ou churrasco.</p>
               <div class="menu-price">R$ 20,00 kg</div>
               <div class="quantity-control">
-                <button onclick="updateQuantity('linguiça-frescal', -0.1, 0.5, 5)">-</button>
-                <input type="number" id="quantity-linguiça-frescal" value="0.5" min="0.5" max="5" step="0.1" readonly>
-                <button onclick="updateQuantity('linguiça-frescal', 0.1, 0.5, 5)">+</button>
+                <button class="minus">-</button>
+                <input type="number" value="1" min="1">
+                <button class="plus">+</button>
                 <span>kg</span>
               </div>
-              <button class="btn btn-primary add-to-cart">Adicionar ao Carrinho</button>
+              <button class="btn btn-cart" data-name="Linguiça Artesanal Frescal de Lombo e Pernil" data-price="20.00">Adicionar ao Carrinho</button>
             </div>
           </div>
         </div>
@@ -421,28 +448,27 @@
         <h2>Bebidas</h2>
         <p>Acompanhe seu Assado com nossas bebidas selecionadas</p>
       </div>
-
       <div class="gallery">
         <div class="gallery-item">
-          <img src="bebidas/Agua.jpg" alt="Água">
+          <img src="bebidas/agua.jpg" alt="Água">
           <div class="gallery-overlay">
             <h4>Água</h4>
           </div>
         </div>
         <div class="gallery-item">
-          <img src="bebidas/Coca.jpg" alt="Coca">
+          <img src="bebidas/coca.jpg" alt="Coca">
           <div class="gallery-overlay">
             <h4>Coca</h4>
           </div>
         </div>
         <div class="gallery-item">
-          <img src="bebidas/Tubaina.jpg" alt="Tubaina">
+          <img src="bebidas/tubaina.jpg" alt="Tubaina">
           <div class="gallery-overlay">
             <h4>Tubaina</h4>
           </div>
         </div>
         <div class="gallery-item">
-          <img src="bebidas/Cervejas.jpg" alt="Cervejas">
+          <img src="bebidas/cervejas.jpg" alt="Cervejas">
           <div class="gallery-overlay">
             <h4>Cervejas</h4>
           </div>
@@ -455,7 +481,6 @@
         <h2>Comentários no Google Maps</h2>
         <p>Veja o que nossos clientes estão dizendo sobre nós no Google Maps!</p>
       </div>
-
       <div class="testimonials">
         <div class="testimonial-item">
           <p>"Melhor Assado de Curitiba! As carnes são sempre frescas e muito bem preparadas. A costelinha pururuca é simplesmente incrível!"</p>
@@ -464,7 +489,6 @@
             <span>João Silva</span>
           </div>
         </div>
-
         <div class="testimonial-item">
           <p>"Atendimento excepcional e comida de altíssima qualidade. A maionese caseira é um diferencial que faz toda a diferença!"</p>
           <div class="testimonial-author">
@@ -472,7 +496,6 @@
             <span>Maria Oliveira</span>
           </div>
         </div>
-
         <div class="testimonial-item">
           <p>"Ambiente acolhedor e carnes no ponto perfeito. Recomendo o frango recheado, é uma delícia! Sempre volto."</p>
           <div class="testimonial-author">
@@ -488,18 +511,16 @@
         <div class="contact-info">
           <h3>Entre em Contato</h3>
           <p><i class="fas fa-map-marker-alt"></i> Rua República Islâmica do Irã, 330 - Jardim das Américas, Curitiba/PR</p>
-          <p><i class="fas fa-phone-alt"></i> <a href="tel:+5541988738707">(41) 98873-8707</a></p>
+          <p><i class="fas fa-phone-alt"></i> (41) 98873-8707</p>
           <p><i class="fas fa-clock"></i> Sábado: 10h às 14h<br>Domingo: 10h às 16h</p>
-          
           <div class="social-links">
-            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/5541988738707" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
-
         <div class="map-container">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3602.238540189611!2d-49.23466892433548!3d-25.45926833333083!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dce472f8f33f0f%3A0x6e7e3e3e3e3e3e3e!2sRua%20Rep%C3%BAblica%20Isl%C3%A2mica%20do%20Ir%C3%A3%2C%20330%20-%20Jardim%20das%20Am%C3%A9ricas%2C%20Curitiba%20-%20PR%2C%2081530-180!5e0!3m2!1spt-BR!2sbr!4v1620000000000!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3602.510095376315!2d-49.23109368503698!3d-25.45604298377936!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dce6b6b3f6e7f7%3A0x4a4c4b4c4b4c4b4c!2sR.%20Rep%C3%BAblica%20Isl%C3%A2mica%20do%20Ir%C3%A3%2C%20330%20-%20Jardim%20das%20Am%C3%A9ricas%2C%20Curitiba%2FPR%2C%2081540-360%2C%20Brasil!5e0!3m2!1spt-BR!2sbr!4v1624961555299!5m2!1spt-BR!2sbr" allowfullscreen="" loading="lazy"></iframe>
         </div>
       </div>
     </section>
@@ -511,350 +532,223 @@
           <p>Há mais de 20 anos no mercado, o Braz Grill se dedica a oferecer os melhores assados com qualidade e tradição.</p>
           <p>Começamos nosso preparo às 5h da manhã para garantir o melhor sabor e suculência em nossos pratos.</p>
         </div>
-
         <div class="footer-col">
           <h4>Horário de Funcionamento</h4>
-          <p><strong>Sábado:</strong> 10h às 14h</p>
-          <p><strong>Domingo:</strong> 10h às 16h</p>
+          <p>Sábado: 10h às 14h</p>
+          <p>Domingo: 10h às 16h</p>
           <p>Assamos todos os sábados e domingos, independente de feriados.</p>
         </div>
-
         <div class="footer-col">
           <h4>Links Rápidos</h4>
           <ul class="footer-links">
-            <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
-            <li><a href="#cardapio"><i class="fas fa-chevron-right"></i> Cardápio</a></li>
-            <li><a href="#bovinas"><i class="fas fa-chevron-right"></i> Carnes Bovinas</a></li>
-            <li><a href="#frangos"><i class="fas fa-chevron-right"></i> Frangos</a></li>
-            <li><a href="#suinas"><i class="fas fa-chevron-right"></i> Carnes Suínas</a></li>
-            <li><a href="#acompanhamentos"><i class="fas fa-chevron-right"></i> Acompanhamentos</a></li>
-            <li><a href="#bebidas"><i class="fas fa-chevron-right"></i> Bebidas</a></li>
+            <li><a href="#home"><i class="fas fa-angle-right"></i> Home</a></li>
+            <li><a href="#cardapio"><i class="fas fa-angle-right"></i> Cardápio</a></li>
+            <li><a href="#carnes-bovinas"><i class="fas fa-angle-right"></i> Carnes Bovinas</a></li>
+            <li><a href="#frangos"><i class="fas fa-angle-right"></i> Frangos</a></li>
+            <li><a href="#carnes-suinas"><i class="fas fa-angle-right"></i> Carnes Suínas</a></li>
+            <li><a href="#acompanhamentos"><i class="fas fa-angle-right"></i> Acompanhamentos</a></li>
+            <li><a href="#bebidas"><i class="fas fa-angle-right"></i> Bebidas</a></li>
           </ul>
         </div>
       </div>
-
       <div class="copyright">
         <p>© 2025 Braz Grill Assados. Todos os direitos reservados.</p>
       </div>
     </footer>
-  </div>
 
-  <div class="mascote">
-    <img src="mascote.png" alt="Mascote Braz Grill">
-  </div>
-
-  <div class="floating-buttons">
-    <button class="btn btn-cart" id="cartButton">
-      <i class="fas fa-shopping-cart"></i> Carrinho (<span id="cartCount">0</span>)
-    </button>
-    <a href="https://wa.me/5541988738707?text=Olá! Gostaria de fazer um pedido." 
-       class="whatsapp-float" 
-       target="_blank">
-      <i class="fab fa-whatsapp"></i>
-      <span>Pedir pelo WhatsApp</span>
-    </a>
-  </div>
-
-  <div class="image-modal" id="imageModal">
-    <div class="modal-content">
-      <span class="modal-close" id="modalClose">×</span>
-      <img id="modalImage" src="" alt="Imagem do Cardápio">
+    <div class="floating-buttons">
+      <a href="#cart" class="btn btn-cart cart-toggle">Carrinho (<span id="cartCount">0</span>)</a>
+      <a href="https://wa.me/5541988738707" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+        <span>Pedir pelo WhatsApp</span>
+      </a>
     </div>
-  </div>
 
-  <div class="cart-modal" id="cartModal">
-    <div class="modal-content">
-      <span class="modal-close" id="cartModalClose">×</span>
-      <h2>Seu Carrinho</h2>
-      <div id="cartItems"></div>
-      <div id="cartTotal"></div>
-      <button class="btn btn-primary" id="finalizeOrder">Finalizar Pedido</button>
+    <div class="mascote">
+      <img src="mascote.png" alt="Mascote Braz Grill">
+    </div>
+
+    <div class="image-modal">
+      <span class="modal-close" aria-label="Fechar modal">×</span>
+      <div class="modal-content">
+        <img src="" alt="Imagem Ampliada">
+      </div>
+    </div>
+
+    <div class="cart-modal">
+      <div class="modal-content">
+        <span class="modal-close" aria-label="Fechar carrinho">×</span>
+        <h2>Seu Carrinho</h2>
+        <p class="cart-message"></p>
+        <div id="cartItems"></div>
+        <div class="cart-total">Total: R$ 0,00</div>
+        <a href="#" class="btn btn-primary finalize-order">Finalizar Pedido</a>
+      </div>
     </div>
   </div>
 
   <script>
-    let cart = [];
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuToggle = document.querySelector('.menu-toggle');
+      const navMenu = document.querySelector('.nav-menu');
+      const cartToggle = document.querySelector('.cart-toggle');
+      const cartModal = document.querySelector('.cart-modal');
+      const cartItemsContainer = document.getElementById('cartItems');
+      const cartCount = document.getElementById('cartCount');
+      const imageModal = document.querySelector('.image-modal');
+      const modalCloseButtons = document.querySelectorAll('.modal-close');
+      const cartMessage = document.querySelector('.cart-modal .cart-message');
+      const finalizeOrderButton = document.querySelector('.finalize-order');
+      let cart = [];
 
-    const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
-
-    menuToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-      menuToggle.innerHTML = navMenu.classList.contains('active') 
-        ? '<i class="fas fa-times"></i>' 
-        : '<i class="fas fa-bars"></i>';
-    });
-
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+      menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
       });
-    });
 
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
+      cartToggle.addEventListener('click', () => {
+        cartModal.classList.toggle('active');
+        updateCart();
+      });
+
+      modalCloseButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          button.closest('.modal').classList.remove('active');
         });
-      });
-    });
-
-    const animateOnScroll = () => {
-      const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
-      elements.forEach(element => {
-        const elementPosition = element.getBoundingClientRect().top;
-        const screenPosition = window.innerHeight / 1.2;
-        if (elementPosition < screenPosition) {
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0)';
-        }
-      });
-    };
-
-    function updateQuantity(itemId, change, min, max) {
-      const input = document.getElementById(`quantity-${itemId}`);
-      let value = parseFloat(input.value);
-      value = Math.max(min, Math.min(max, value + change));
-      input.value = value.toFixed(change < 1 ? 2 : 0);
-    }
-
-    function addToCart(name, quantity, unit, price) {
-      const existingItem = cart.find(item => item.name === name);
-      if (existingItem) {
-        existingItem.quantity += quantity;
-      } else {
-        cart.push({ name, quantity, unit, price });
-      }
-      updateCartDisplay();
-      triggerCartAnimation();
-    }
-
-    function triggerCartAnimation() {
-      const cartButton = document.getElementById('cartButton');
-      cartButton.classList.add('cart-added');
-      setTimeout(() => {
-        cartButton.classList.remove('cart-added');
-      }, 500);
-    }
-
-    function updateCartDisplay() {
-      const cartItemsDiv = document.getElementById('cartItems');
-      cartItemsDiv.innerHTML = '';
-      let total = 0;
-      cart.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.classList.add('cart-item');
-        const nameSpan = document.createElement('span');
-        nameSpan.classList.add('cart-item-name');
-        nameSpan.textContent = `${item.name} (${item.quantity} ${item.unit})`;
-        const quantityDiv = document.createElement('div');
-        quantityDiv.classList.add('cart-item-quantity');
-        const decreaseBtn = document.createElement('button');
-        decreaseBtn.textContent = '-';
-        decreaseBtn.onclick = () => adjustCartItem(index, -1);
-        const quantitySpan = document.createElement('span');
-        quantitySpan.textContent = item.quantity;
-        const increaseBtn = document.createElement('button');
-        increaseBtn.textContent = '+';
-        increaseBtn.onclick = () => adjustCartItem(index, 1);
-        quantityDiv.appendChild(decreaseBtn);
-        quantityDiv.appendChild(quantitySpan);
-        quantityDiv.appendChild(increaseBtn);
-        const removeBtn = document.createElement('button');
-        removeBtn.classList.add('cart-item-remove');
-        removeBtn.textContent = 'Remover';
-        removeBtn.onclick = () => removeCartItem(index);
-        itemDiv.appendChild(nameSpan);
-        itemDiv.appendChild(quantityDiv);
-        itemDiv.appendChild(removeBtn);
-        cartItemsDiv.appendChild(itemDiv);
-        const itemTotal = item.quantity * item.price;
-        total += itemTotal;
-      });
-      document.getElementById('cartTotal').textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
-      document.getElementById('cartCount').textContent = cart.length;
-    }
-
-    function adjustCartItem(index, change) {
-      const item = cart[index];
-      if (item.unit === 'kg') {
-        item.quantity = Math.max(0.5, item.quantity + change * 0.1);
-        item.quantity = parseFloat(item.quantity.toFixed(2));
-      } else {
-        item.quantity = Math.max(1, item.quantity + change);
-      }
-      if (item.quantity <= 0) {
-        cart.splice(index, 1);
-      }
-      updateCartDisplay();
-    }
-
-    function removeCartItem(index) {
-      cart.splice(index, 1);
-      updateCartDisplay();
-    }
-
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('add-to-cart')) {
-        const menuItem = e.target.closest('.menu-item');
-        const baseName = menuItem.querySelector('h4').textContent;
-        const option = e.target.getAttribute('data-option');
-        const name = option ? `${baseName} - ${option}` : baseName;
-        const priceText = menuItem.querySelector('.menu-price').textContent;
-        const price = parseFloat(priceText.replace('R$', '').replace(',', '.').trim());
-        const quantityInput = menuItem.querySelector('input[type="number"]');
-        const quantity = parseFloat(quantityInput.value);
-        const unit = menuItem.querySelector('.quantity-control span').textContent;
-        addToCart(name, quantity, unit, price);
-      }
-    });
-
-    const cartButton = document.getElementById('cartButton');
-    const cartModal = document.getElementById('cartModal');
-    const cartModalClose = document.getElementById('cartModalClose');
-    cartButton.addEventListener('click', () => {
-      updateCartDisplay();
-      cartModal.classList.add('active');
-    });
-    cartModalClose.addEventListener('click', () => {
-      cartModal.classList.remove('active');
-    });
-    cartModal.addEventListener('click', (e) => {
-      if (e.target === cartModal) {
-        cartModal.classList.remove('active');
-      }
-    });
-
-    document.getElementById('finalizeOrder').addEventListener('click', () => {
-      if (cart.length === 0) {
-        alert('Seu carrinho está vazio!');
-        return;
-      }
-      let message = 'Quero reservar ⬇⬇\n';
-      cart.forEach(item => {
-        const quantity = item.unit === 'kg' ? item.quantity.toFixed(2).replace('.', ',') : item.quantity;
-        message += `x${quantity} ${item.name}\n`;
-      });
-      const whatsappUrl = `https://wa.me/5541988738707?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const elements = document.querySelectorAll('.menu-item, .gallery-item, .testimonial-item');
-      elements.forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-      });
-      
-      void elements[0].offsetHeight;
-      
-      animateOnScroll();
-
-      const menuItems = document.querySelectorAll('.menu-item, .gallery-item');
-      menuItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-          item.classList.add('zoom-active');
-          const img = item.querySelector('img');
-          if (img) {
-            img.classList.add('zoom-active-img');
-          }
-        });
-
-        item.addEventListener('mouseleave', () => {
-          item.classList.remove('zoom-active');
-          const img = item.querySelector('img');
-          if (img) {
-            img.classList.remove('zoom-active-img');
-          }
-        });
-
-        let touchTimer = null;
-        let touchStartY = 0;
-        let touchStartX = 0;
-
-        item.addEventListener('touchstart', (e) => {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-          touchTimer = setTimeout(() => {
-            menuItems.forEach(otherItem => {
-              if (otherItem !== item) {
-                otherItem.classList.remove('zoom-active');
-                const otherImg = otherItem.querySelector('img');
-                if (otherImg) {
-                  otherImg.classList.remove('zoom-active-img');
-                }
-              }
-            });
-            item.classList.add('zoom-active');
-            const img = item.querySelector('img');
-            if (img) {
-              img.classList.add('zoom-active-img');
-            }
-          }, 300);
-        });
-
-        item.addEventListener('touchmove', (e) => {
-          const touchEndX = e.touches[0].clientX;
-          const touchEndY = e.touches[0].clientY;
-          const deltaX = Math.abs(touchEndX - touchStartX);
-          const deltaY = Math.abs(touchEndY - touchStartY);
-          if (deltaX > 10 || deltaY > 10) {
-            clearTimeout(touchTimer);
-          }
-        });
-
-        item.addEventListener('touchend', () => {
-          clearTimeout(touchTimer);
-          setTimeout(() => {
-            item.classList.remove('zoom-active');
-            const img = item.querySelector('img');
-            if (img) {
-              img.classList.remove('zoom-active-img');
-            }
-          }, 500);
-        });
-
-        const img = item.querySelector('img');
-        if (img) {
-          img.addEventListener('click', (e) => {
-            e.stopPropagation();
-            modalImage.src = img.src;
-            imageModal.classList.add('active');
-          });
-
-          img.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-            clearTimeout(touchTimer);
-          });
-
-          img.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            modalImage.src = img.src;
-            imageModal.classList.add('active');
-          });
-        }
-      });
-
-      const imageModal = document.getElementById('imageModal');
-      const modalImage = document.getElementById('modalImage');
-      const modalClose = document.getElementById('modalClose');
-
-      modalClose.addEventListener('click', () => {
-        imageModal.classList.remove('active');
       });
 
       imageModal.addEventListener('click', (e) => {
-        if (e.target === imageModal) {
+        if (e.target.classList.contains('image-modal') || e.target.classList.contains('modal-close')) {
           imageModal.classList.remove('active');
         }
       });
-    });
 
-    window.addEventListener('scroll', animateOnScroll);
+      document.querySelectorAll('.btn-cart').forEach(button => {
+        button.addEventListener('click', () => {
+          const item = button.closest('.menu-item');
+          const name = button.dataset.name;
+          const price = parseFloat(button.dataset.price);
+          const quantityInput = item.querySelector('.quantity-control input');
+          const quantity = parseFloat(quantityInput.value) || 1;
+          const unit = item.querySelector('.quantity-control span').textContent;
+          let option = '';
+          const selectedOption = item.querySelector('.option-buttons .option.active');
+          if (selectedOption) {
+            option = selectedOption.dataset.option;
+          }
+
+          const cartItem = { name, price, quantity, unit, option };
+          const existingItemIndex = cart.findIndex(i => i.name === name && i.option === option);
+          if (existingItemIndex > -1) {
+            cart[existingItemIndex].quantity += quantity;
+          } else {
+            cart.push(cartItem);
+          }
+
+          button.classList.add('cart-added');
+          setTimeout(() => button.classList.remove('cart-added'), 500);
+
+          cartMessage.textContent = `${name}${option ? ` (${option})` : ''} adicionado ao carrinho!`;
+          cartMessage.classList.add('success');
+          cartMessage.style.display = 'block';
+          setTimeout(() => {
+            cartMessage.style.display = 'none';
+            cartMessage.classList.remove('success');
+          }, 2000);
+
+          updateCart();
+        });
+      });
+
+      document.querySelectorAll('.option').forEach(button => {
+        button.addEventListener('click', () => {
+          button.closest('.option-buttons').querySelectorAll('.option').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+        });
+      });
+
+      document.querySelectorAll('.quantity-control .minus').forEach(button => {
+        button.addEventListener('click', () => {
+          const input = button.nextElementSibling;
+          let value = parseFloat(input.value);
+          if (value > 1) {
+            input.value = (value - 1).toFixed(2);
+          }
+        });
+      });
+
+      document.querySelectorAll('.quantity-control .plus').forEach(button => {
+        button.addEventListener('click', () => {
+          const input = button.previousElementSibling;
+          let value = parseFloat(input.value);
+          input.value = (value + 1).toFixed(2);
+        });
+      });
+
+      document.querySelectorAll('.menu-item-img img').forEach(img => {
+        img.addEventListener('click', () => {
+          const modal = document.querySelector('.image-modal');
+          const modalImg = modal.querySelector('img');
+          modalImg.src = img.src;
+          modal.classList.add('active');
+        });
+      });
+
+      function updateCart() {
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+        cart.forEach((item, index) => {
+          const itemTotal = item.price * item.quantity;
+          total += itemTotal;
+          const cartItem = document.createElement('div');
+          cartItem.classList.add('cart-item');
+          cartItem.innerHTML = `
+            <span class="cart-item-name">${item.name}${item.option ? ` (${item.option})` : ''}</span>
+            <span class="cart-item-price">R$ ${itemTotal.toFixed(2)}</span>
+            <div class="cart-item-quantity">
+              <button class="minus">-</button>
+              <input type="number" value="${item.quantity}" min="1">
+              <button class="plus">+</button>
+              <span>${item.unit}</span>
+            </div>
+            <span class="cart-item-close" aria-label="Remover item do carrinho">×</span>
+          `;
+          cartItemsContainer.appendChild(cartItem);
+
+          cartItem.querySelector('.minus').addEventListener('click', () => {
+            if (item.quantity > 1) {
+              item.quantity -= 1;
+              updateCart();
+            }
+          });
+
+          cartItem.querySelector('.plus').addEventListener('click', () => {
+            item.quantity += 1;
+            updateCart();
+          });
+
+          cartItem.querySelector('.cart-item-close').addEventListener('click', () => {
+            cart.splice(index, 1);
+            updateCart();
+          });
+        });
+
+        cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        document.querySelector('.cart-total').textContent = `Total: R$ ${total.toFixed(2)}`;
+
+        // Atualizar o link do WhatsApp com a mensagem formatada
+        const whatsappMessage = generateWhatsAppMessage(cart, total);
+        finalizeOrderButton.href = `https://wa.me/5541988738707?text=${encodeURIComponent(whatsappMessage)}`;
+      }
+
+      function generateWhatsAppMessage(cart, total) {
+        let message = 'Olá, gostaria de reservar um pedido!!\n';
+        cart.forEach(item => {
+          message += `├── ${item.quantity}x ${item.name}${item.option ? ` (${item.option})` : ''}\n`;
+        });
+        message += `\nTotal: R$ ${total.toFixed(2)}`;
+        return message;
+      }
+    });
   </script>
 </body>
 </html>
