@@ -1,0 +1,11 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "re-delta-eight.vercel",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "re-delta-eight.vercel",
+  "start_url": "https://re-delta-eight.vercel.app/",
+  "theme_color": "#ffffff"
+}
