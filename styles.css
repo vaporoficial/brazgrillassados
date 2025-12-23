@@ -1689,3 +1689,39 @@ footer {
     display: inline;
   }
 }
+.ferias-aviso {
+  background-color: #fff3cd;
+  border-left: 5px solid #ffc107;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem auto;
+  max-width: 1200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  color: #856404;
+}
+
+.ferias-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ferias-container i {
+  font-size: 2rem;
+  color: #856404;
+}
+
+.ferias-texto {
+  line-height: 1.6;
+}
+
+.ferias-texto strong {
+  color: #c47c00;
+}
+
+@media (max-width: 768px) {
+  .ferias-container {
+    flex-direction: column;
+    text-align: center;
+  }
+}
