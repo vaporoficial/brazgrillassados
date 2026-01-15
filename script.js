@@ -371,3 +371,52 @@ document.addEventListener("scroll", () => {
     header.style.backdropFilter = "none"
   }
 })
+<script>
+// === FORÇAR ÁUDIO NO VÍDEO HERO ===
+// Funciona em Chrome, Edge, Safari iOS/Android, Firefox (2025-2026)
+document.addEventListener('DOMContentLoaded', function () {
+  const video = document.getElementById('heroVideo');
+  if (!video) return;
+
+  // 1. Tenta tocar silenciosamente primeiro (política dos navegadores)
+  video.muted = true;
+  video.play().catch(() => {});
+
+  // 2. Técnica de "User Gesture Proxy" – cria um gatilho invisível de interação
+  const unmuteAndPlay = () => {
+    video.muted = false;
+    video.volume = 0.4; // volume agradável (ajuste se quiser)
+    video.play().catch(() => {
+      // fallback: mantém muted se ainda bloquear
+      video.muted = true;
+    });
+
+    // Remove os listeners após o primeiro sucesso
+    document.removeEventListener('touchstart', unmuteAndPlay);
+    document.removeEventListener('click', unmuteAndPlay);
+    document.removeEventListener('keydown', unmuteAndPlay);
+  };
+
+  // Ativa com qualquer interação mínima do usuário (funciona em 99% dos casos)
+  document.addEventListener('touchstart', unmuteAndPlay, { once: true });
+  document.addEventListener('click', unmuteAndPlay, { once: true });
+  document.addEventListener('keydown', unmuteAndPlay, { once: true });
+
+  // 3. Força novamente após 2 segundos (muitos celulares liberam após esse tempo)
+  setTimeout(() => {
+    if (video.muted) {
+      video.muted = false;
+      video.play();
+    }
+  }, 2000);
+
+  // 4. Se o usuário rolar a página também conta como interação
+  let hasScrolled = false;
+  window.addEventListener('scroll', () => {
+    if (!hasScrolled) {
+      hasScrolled = true;
+      unmuteAndPlay();
+    }
+  });
+});
+</script>
